@@ -10,11 +10,14 @@ def main():
     while running:
         current_scene.update()  # 현재 씬 업데이트
         current_scene.draw()    # 현재 씬 그리기
+        
         update_canvas()         # 캔버스 업데이트
         
         events = get_events()   # 이벤트 처리
         for event in events:
-            running = handle.handle_event(event, current_scene)  # 이벤트 핸들러 호출
+            running = handle.handle_event(current_scene, event)  # 이벤트 핸들러 호출
+            current_scene.handle_event(event)
+        
             if not running:
                 break
 
