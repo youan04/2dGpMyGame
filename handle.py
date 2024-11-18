@@ -1,5 +1,6 @@
 from pico2d import *
 
+
 def handle_event(current_scene, event):
     if event.type == SDL_QUIT:  # 종료 이벤트 처리
         return False

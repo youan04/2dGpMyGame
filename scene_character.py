@@ -20,6 +20,3 @@ class SceneCharacter:
             x, y = event.x, 700 - event.y  # y 좌표 반전 (캔버스 높이에 맞게)
             
         return self  # 기본적으로 현재 씬 유지
-            
-    
-            
