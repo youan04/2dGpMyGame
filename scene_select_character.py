@@ -5,10 +5,10 @@ class SceneCharacter:
         # 캐릭터 씬 이미지 로드
         self.image = load_image('resource/image/door.png')  
         self.knight = load_image('resource/image/knight.png')
-        self.archer = load_image('resource/image/door.png')
-        self.mage = load_image('resource/image/door.png')
-        self.priest = load_image('resource/image/door.png')
-        self.guard = load_image('resource/image/door.png')
+        self.archer = load_image('resource/image/archer.png')
+        self.mage = load_image('resource/image/mage.png')
+        self.priest = load_image('resource/image/priest.png')
+        self.guard = load_image('resource/image/guard.png')
 
         # 각 캐릭터별 프레임 초기화
         self.frame = {
@@ -31,12 +31,12 @@ class SceneCharacter:
         frame_int = int(frame)
         frame_width = image.w // total_columns
         frame_height = image.h // total_rows
-        # current_column = frame_int % total_columns
-        # current_row = total_rows - 1 - (frame_int // total_columns)
+        current_column = frame_int % total_columns
+        current_row = total_rows - 1 - (frame_int // total_columns)
         
         # 맨 위 가로줄(첫 번째 행)의 프레임만 사용
-        current_column = frame_int % total_columns  # 열 번호는 0~2로 순환
-        current_row = total_rows - 1  # 맨 위 행 고정
+        # current_column = frame_int % total_columns  # 열 번호는 0~2로 순환
+        # current_row = total_rows - 1  # 맨 위 행 고정
 
         # 캐릭터 애니메이션 그리기
         image.clip_draw(
@@ -58,7 +58,7 @@ class SceneCharacter:
         self.draw_character(self.archer, self.frame['archer'], 125, 650, 50, 50)
         self.draw_character(self.mage, self.frame['mage'], 200, 650, 50, 50)
         self.draw_character(self.priest, self.frame['priest'], 50, 575, 50, 50)
-        self.draw_character(self.priest, self.frame['guard'], 125, 575, 50, 50)
+        self.draw_character(self.guard, self.frame['guard'], 125, 575, 50, 50)
 
     def change_scene(self, new_scene):
         self.__class__ = new_scene.__class__  # 새로운 씬으로 클래스 변경
