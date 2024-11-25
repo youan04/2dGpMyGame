@@ -1,5 +1,5 @@
 from pico2d import *
-import scene_character, scene_select
+import scene_select_character, scene_select_map
 
 class SceneMain:
     def __init__(self):
@@ -33,12 +33,12 @@ class SceneMain:
             if (self.character_button_x - self.button_width // 2 < x < self.character_button_x + self.button_width // 2 and
                 self.character_button_y - self.button_height // 2 < y < self.character_button_y + self.button_height // 2):
                 print("캐릭터 버튼 클릭됨")
-                self.change_scene(scene_character.SceneCharacter())  # 캐릭터 씬으로 전환
+                self.change_scene(scene_select_character.SceneCharacter())  # 캐릭터 씬으로 전환
                 
             elif (self.adventure_button_x - self.button_width // 2 < x < self.adventure_button_x + self.button_width // 2 and
                 self.adventure_button_y - self.button_height // 2 < y < self.adventure_button_y + self.button_height // 2):
                 print("모험 버튼 클릭됨")
-                self.change_scene(scene_select.SceneSelect())  # 선택 씬으로 전환 
+                self.change_scene(scene_select_map.SceneSelect())  # 선택 씬으로 전환 
                 
         
         return self  # 기본적으로 현재 씬 유지
