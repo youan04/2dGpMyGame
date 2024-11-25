@@ -2,7 +2,7 @@
 from pico2d import *
 class SceneSelect:
     def __init__(self):
-        self.image = load_image('map.png')  # 선택 씬 이미지 로드
+        self.image = load_image(f'resource/image/map.png')  # 선택 씬 이미지 로드
 
     def update(self):
         pass

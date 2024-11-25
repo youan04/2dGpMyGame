@@ -2,7 +2,7 @@
 from pico2d import *
 class SceneIngame:
     def __init__(self):
-        self.image = load_image('demon.png')  # 게임 씬 이미지 로드
+        self.image = load_image(f'resource/image/demon.png')  # 게임 씬 이미지 로드
 
     def update(self):
         pass

@@ -1,7 +1,7 @@
 from pico2d import *
 class SceneCharacter:
     def __init__(self):
-        self.image = load_image('door.png')  # 캐릭터 씬 이미지 로드
+        self.image = load_image(f'resource/image/door.png')  # 캐릭터 씬 이미지 로드
 
     def update(self):
         pass
