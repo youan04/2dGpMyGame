@@ -31,12 +31,12 @@ class SceneCharacter:
         frame_int = int(frame)
         frame_width = image.w // total_columns
         frame_height = image.h // total_rows
-        current_column = frame_int % total_columns
-        current_row = total_rows - 1 - (frame_int // total_columns)
+        # current_column = frame_int % total_columns
+        # current_row = total_rows - 1 - (frame_int // total_columns)
         
-        # 맨 위 가로줄(첫 번째 행)의 프레임만 사용
-        # current_column = frame_int % total_columns  # 열 번호는 0~2로 순환
-        # current_row = total_rows - 1  # 맨 위 행 고정
+        #맨 위 가로줄(첫 번째 행)의 프레임만 사용
+        current_column = frame_int % total_columns  # 열 번호는 0~2로 순환
+        current_row = total_rows - 1  # 맨 위 행 고정
 
         # 캐릭터 애니메이션 그리기
         image.clip_draw(

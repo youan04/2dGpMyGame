@@ -1,6 +1,7 @@
 from pico2d import *
-import handle
+import global_handle
 import scene_main, scene_select_character, scene_select_map, scene_ingame
+import character_class
 
 def main():
     open_canvas(400, 700)  # 캔버스 크기 설정
@@ -16,7 +17,7 @@ def main():
         events = get_events()   # 이벤트 처리
         for event in events:
             
-            running = handle.handle_event(current_scene, event)  # 이벤트 핸들러 호출
+            running = global_handle.handle_event(current_scene, event)  # 이벤트 핸들러 호출
             current_scene.handle_event(event)
         
             if not running:

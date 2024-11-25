@@ -3,9 +3,9 @@ import scene_select_character, scene_select_map
 
 class SceneMain:
     def __init__(self):
-        self.image = load_image(f'resource/image/blue_sky.png')  # 메인 씬 이미지 로드
-        self.adventure_button = load_image(f'resource/image/adventure_button.png')  # 모험 버튼 이미지 로드
-        self.character_button = load_image(f'resource/image/charactor_choice_button.png')  # 캐릭터 선택 버튼 이미지 로드
+        self.image = load_image('resource/image/blue_sky.png')  # 메인 씬 이미지 로드
+        self.adventure_button = load_image('resource/image/adventure_button.png')  # 모험 버튼 이미지 로드
+        self.character_button = load_image('resource/image/charactor_choice_button.png')  # 캐릭터 선택 버튼 이미지 로드
         
         # 버튼 위치 및 크기 설정 (좌표 및 크기는 필요에 따라 조정)
         self.adventure_button_x, self.adventure_button_y = 100, 150
