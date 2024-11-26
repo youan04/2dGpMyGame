@@ -1,5 +1,5 @@
 from pico2d import *
-from character_class import characters  # character_objects에서 캐릭터들을 불러옴
+from character_class import Character  # character_objects에서 캐릭터들을 불러옴
 
 class SceneIngame:
     def __init__(self):
@@ -7,7 +7,15 @@ class SceneIngame:
         self.tile = load_image(f'resource/image/stone_tile.png')  # 게임 씬 이미지 로드
         self.board_size = 8  # 8x8 보드 크기
         self.grid_size = 50  # 각 셀의 크기 (픽셀)
-        self.characters = characters  # character_objects에서 불러온 캐릭터들
+        
+        self.characters = [
+            Character('Knight', 'resource/image/knight.png', 100, 200),
+            Character('Archer', 'resource/image/archer.png', 150, 200),
+            Character('Mage', 'resource/image/mage.png', 200, 200),
+            Character('Priest', 'resource/image/priest.png', 250, 200)
+        ]
+        
+        
         
     def update(self):
         pass
@@ -25,7 +33,7 @@ class SceneIngame:
 
         # 배경 이미지와 타일 이미지 그리기 (기존 이미지)
         
-        for character in self.characters.values():
+        for character in self.characters:
             character.draw()
 
     def change_scene(self, new_scene):
