@@ -9,6 +9,7 @@ class Character:
         self.state = "idle_down"
         self.frame = 0
         self.frame_speed = 0.2
+        self.isSelected = False  # 선택된 상태를 추적
 
     def set_state(self, new_state):
         if self.state != new_state:
@@ -49,3 +50,7 @@ class Character:
             frame_height,
             self.x, self.y, self.width, self.height
         )
+
+        # 선택된 캐릭터는 빨간색 테두리로 강조 표시
+        if self.isSelected:
+            draw_rectangle(self.x - 50//2, self.y - 50//2, self.x + 50//2, self.y + 50//2)  # 빨간 사각형 그리기

@@ -19,11 +19,9 @@ class SceneIngame:
             x = start_x + (i * x_offset)
             self.characters.append(Character(name, image_path, x, start_y))
 
-        self.selected_ingame_character = None  # 선택된 캐릭터를 추적
-
     def update(self):
-        if self.selected_ingame_character:
-            self.selected_ingame_character.update()  # 선택된 캐릭터 애니메이션 업데이트
+        for character in self.characters:
+            character.update()  # 각 캐릭터의 애니메이션 업데이트
 
     def draw(self):
         clear_canvas()
@@ -54,23 +52,34 @@ class SceneIngame:
 
             # 클릭된 좌표가 보드 내에 있는지 확인
             if 0 <= grid_x < self.board_size and 0 <= grid_y < self.board_size:
-                # 클릭된 타일 위치에 캐릭터를 올바르게 이동
+                # 선택된 캐릭터가 있으면 이동
+                selected_character = None
                 for character in self.characters:
-                    if character.x == grid_x * self.grid_size + self.grid_size // 2 and \
-                       character.y == grid_y * self.grid_size + self.grid_size // 2 + 100:
-                        # 선택된 캐릭터가 있으면 선택을 해제하고 새 캐릭터 선택
-                        if self.selected_ingame_character == character:
-                            self.selected_ingame_character = None  # 선택 해제
-                        else:
-                            self.selected_ingame_character = character  # 새 캐릭터 선택
-                        return self  # 현재 씬 유지
+                    if character.isSelected:
+                        selected_character = character
+                        break
 
-                # 선택된 캐릭터가 있을 경우, 그 캐릭터를 이동시킴
-                if self.selected_ingame_character:
-                    # 타일에 해당하는 좌표로 이동
-                    self.move_character(self.selected_ingame_character, grid_x, grid_y)
+                if selected_character:
+                    # 이동하기 전에 선택된 캐릭터 상태 해제
+                    self.deselect_all_characters()  # 다른 캐릭터 선택을 위해 해제
+                    self.move_character(selected_character, grid_x, grid_y)
+                # 타일에 위치한 캐릭터 선택
+                else:
+                    for character in self.characters:
+                        if character.x == grid_x * self.grid_size + self.grid_size // 2 and \
+                           character.y == grid_y * self.grid_size + self.grid_size // 2 + 100:
+                            # 기존 선택된 캐릭터는 선택 해제
+                            self.deselect_all_characters()
+                            # 새로 선택된 캐릭터는 선택 상태로 설정
+                            character.isSelected = True
+                            return self  # 새로 선택된 캐릭터로 갱신
 
             return self  # 현재 씬 유지
+
+    def deselect_all_characters(self):
+        """모든 캐릭터의 선택 상태를 해제하는 함수"""
+        for character in self.characters:
+            character.isSelected = False
 
     def move_character(self, character, target_x, target_y):
         """선택된 캐릭터를 상하좌우로 이동시키기 위한 함수"""
