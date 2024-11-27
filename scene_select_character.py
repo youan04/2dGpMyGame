@@ -1,5 +1,8 @@
 from pico2d import *
 
+# 선택된 캐릭터를 저장하는 전역 배열 (최대 4개)
+selected_characters = []
+
 class SceneCharacter:
     def __init__(self):
         # 캐릭터 씬 이미지 로드
@@ -10,62 +13,66 @@ class SceneCharacter:
         self.priest_button = load_image('resource/image/priest.png')
         self.guard_button = load_image('resource/image/guard.png')
 
-        # 각 캐릭터별 프레임 초기화
-        self.frame_button = {
-            'knight_button': 0,
-            'archer_button': 0,
-            'mage_button': 0,
-            'priest_button': 0,
-            'guard_button': 0
-        }
-        self.frame_speed = 1 # 초당 프레임 갱신 속도 설정 (FPS)
+        # 버튼 위치와 크기
+        self.buttons = [
+            {"name": "Knight", "x": 75, "y": 575, "image": self.knight_button},
+            {"name": "Archer", "x": 200, "y": 575, "image": self.archer_button},
+            {"name": "Mage", "x": 75, "y": 450, "image": self.mage_button},
+            {"name": "Priest", "x": 200, "y": 450, "image": self.priest_button},
+            {"name": "Guard", "x": 325, "y": 575, "image": self.guard_button},
+        ]
+        self.button_size = 125  # 버튼 크기
+
 
     def update(self):
-        # 각 버튼의 프레임 업데이트
-        for key in self.frame_button:
-            self.frame_button[key] = (self.frame_button[key] + self.frame_speed * (1 / 60)) % 12  # 각 캐릭터는 12 프레임으로 구성
-
-    def draw_button(self, image, frame, x, y, width, height):
-        total_columns = 3
-        total_rows = 4
-        frame_int = int(frame)
-        frame_width = image.w // total_columns
-        frame_height = image.h // total_rows
-        # current_column = frame_int % total_columns
-        # current_row = total_rows - 1 - (frame_int // total_columns)
+        pass
+    
+    def draw_button(self, button):
+        """버튼을 그리면서 선택 여부에 따라 테두리를 표시"""
+        if button["name"] in selected_characters:
+            # 선택된 버튼은 빨간색 테두리를 그림
+            draw_rectangle(button["x"] - self.button_size // 2, 
+                           button["y"] - self.button_size // 2, 
+                           button["x"] + self.button_size // 2, 
+                           button["y"] + self.button_size // 2)
+        # 버튼 이미지를 그림
         
-        #맨 위 가로줄(첫 번째 행)의 프레임만 사용
-        current_column = frame_int % total_columns  # 열 번호는 0~2로 순환
-        current_row = total_rows - 1  # 맨 위 행 고정
 
-        # 버튼 애니메이션 그리기
-        image.clip_draw(
-            frame_width * current_column,
-            frame_height * current_row,
-            frame_width,
-            frame_height,
-            x, y, width, height
+        button["image"].clip_draw(
+            0, 
+            int(button["image"].h / 4 * 3),  # 정수로 변환
+            int(button["image"].w / 3),      # 정수로 변환
+            int(button["image"].h / 4),      # 정수로 변환
+            button["x"], 
+            button["y"], 
+            self.button_size, 
+            self.button_size
         )
 
+        
+
     def draw(self):
-        clear_canvas()  # 화면 지우기
-
-        # 배경 이미지 그리기
-        self.image.draw(200, 350, 400, 700)
-        button_size = 125
-        # 각 버튼 애니메이션 그리기
-        self.draw_button(self.knight_button, self.frame_button['knight_button'], 0*button_size+75, 700-button_size, button_size, button_size)
-        self.draw_button(self.archer_button, self.frame_button['archer_button'], 1*button_size+75, 700-button_size, button_size, button_size)
-        self.draw_button(self.mage_button, self.frame_button['mage_button'], 2*button_size+75, 700-button_size, button_size, button_size)
-        self.draw_button(self.priest_button, self.frame_button['priest_button'], 0*button_size+75, 700-2*button_size, button_size, button_size)
-        self.draw_button(self.guard_button, self.frame_button['guard_button'], 1*button_size+75, 700-2*button_size, button_size, button_size)
-
-    def change_scene(self, new_scene):
-        self.__class__ = new_scene.__class__  # 새로운 씬으로 클래스 변경
-        self.__dict__ = new_scene.__dict__  # 새로운 씬의 속성 복사
+        clear_canvas()
+        self.image.draw(200, 350, 400, 700)  # 배경 이미지 그리기
+        for button in self.buttons:
+            self.draw_button(button)
 
     def handle_event(self, event):
+        global selected_characters
         if event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
-            x, y = event.x, 700 - event.y  # y 좌표 반전 (캔버스 높이에 맞게)
-
-        return self  # 기본적으로 현재 씬 유지
+            x, y = event.x, 700 - event.y  # y 좌표 반전
+            for button in self.buttons:
+                bx, by = button["x"], button["y"]
+                # 버튼 클릭 여부 확인
+                if (bx - self.button_size // 2 <= x <= bx + self.button_size // 2 and
+                        by - self.button_size // 2 <= y <= by + self.button_size // 2):
+                    if button["name"] in selected_characters:
+                        # 이미 선택된 캐릭터라면 배열에서 제거
+                        selected_characters.remove(button["name"])
+                    elif len(selected_characters) < 4:
+                        # 선택 가능한 공간이 있다면 배열에 추가
+                        selected_characters.append(button["name"])
+                    else:
+                        # 배열이 가득 찬 경우 오류 메시지 출력
+                        print("선택 가능한 캐릭터는 최대 4명입니다!")
+                    break
