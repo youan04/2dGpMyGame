@@ -8,7 +8,7 @@ class Character:
         self.width, self.height = 50, 50  # 캐릭터 크기
         self.state = "idle_down"  # 초기 상태 (가만히 아래를 보고 있음)
         self.frame = 0  # 현재 애니메이션 프레임
-        self.frame_speed = 0.1  # 프레임 갱신 속도
+        self.frame_speed = 0.2  # 프레임 갱신 속도
 
     def set_state(self, new_state):
         """상태 변경 함수"""
