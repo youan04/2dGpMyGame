@@ -56,6 +56,10 @@ class SceneCharacter:
         self.image.draw(200, 350, 400, 700)  # 배경 이미지 그리기
         for button in self.buttons:
             self.draw_button(button)
+            
+    def change_scene(self, new_scene):
+        self.__class__ = new_scene.__class__  # 새로운 씬으로 클래스 변경
+        self.__dict__ = new_scene.__dict__  # 새로운 씬의 속성 복사
 
     def handle_event(self, event):
         global selected_characters
