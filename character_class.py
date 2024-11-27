@@ -6,7 +6,7 @@ class Character:
         self.image = load_image(image_path)
         self.x, self.y = x, y
         self.width, self.height = 50, 50
-        self.state = "idle_down"
+        self.state = "idle_up"
         self.frame = 0
         self.frame_speed = 0.2
         self.isSelected = False  # 선택된 상태를 추적
@@ -32,9 +32,9 @@ class Character:
         if self.state == "idle_down" or self.state == "walk_down":
             current_row = 3
         elif self.state == "idle_right" or self.state == "walk_right":
-            current_row = 2
-        elif self.state == "idle_left" or self.state == "walk_left":
             current_row = 1
+        elif self.state == "idle_left" or self.state == "walk_left":
+            current_row = 2
         elif self.state == "idle_up" or self.state == "walk_up":
             current_row = 0
 
