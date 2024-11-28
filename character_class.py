@@ -1,9 +1,9 @@
 from pico2d import *
 
 class Character:
-    def __init__(self, name, image_path, x, y):
+    def __init__(self, name, image_path, x, y, attack, hp, speed):
         self.name = name
-        self.image = load_image(image_path)
+        self.image = image_path
         self.x, self.y = x, y
         self.width, self.height = 50, 50
         self.state = "idle_up"

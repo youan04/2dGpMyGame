@@ -2,6 +2,7 @@ from pico2d import *
 import global_handle
 import scene_main, scene_select_character, scene_select_map, scene_ingame
 import character_class
+import global_state
 
 def main():
     open_canvas(400, 700)  # 캔버스 크기 설정
