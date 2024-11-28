@@ -1,3 +1,5 @@
+#scene_ingame
+
 from pico2d import *
 from character_class import Character
 import global_state  # global_state.py 임포트
@@ -10,15 +12,15 @@ class SceneIngame:
         self.board_size = 8
         self.grid_size = 50
 
-        # 선택된 캐릭터를 기반으로 생성
-        self.characters = []
+        # 선택된 캐릭터를 기반으로 이미 global_state에서 캐릭터들이 존재하므로
+        self.characters = global_state.selected_characters  # 이미 선택된 Character 객체를 그대로 사용
         start_x, start_y = 125, 225
         x_offset = self.grid_size
 
-        for i, name in enumerate(global_state.selected_characters):  # global_state에서 가져옴
-            image_path = f'resource/image/{name.lower()}.png'
-            x = start_x + (i * x_offset)
-            self.characters.append(Character(name, image_path, x, start_y))
+        # self.characters는 이미 Character 객체 리스트이므로, 별도로 추가할 필요 없음
+        for i, character in enumerate(self.characters):  # global_state.selected_characters에서 직접 가져옴
+            character.x = start_x + (i * x_offset)  # 캐릭터 위치 설정
+            character.y = start_y  # y 좌표 설정
 
     def update(self):
         for character in self.characters:
