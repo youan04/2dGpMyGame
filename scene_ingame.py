@@ -1,6 +1,7 @@
 from pico2d import *
 from character_class import Character
-from scene_select_character import selected_characters
+import global_state  # global_state.py 임포트
+
 
 class SceneIngame:
     def __init__(self):
@@ -14,7 +15,7 @@ class SceneIngame:
         start_x, start_y = 125, 225
         x_offset = self.grid_size
 
-        for i, name in enumerate(selected_characters):
+        for i, name in enumerate(global_state.selected_characters):  # global_state에서 가져옴
             image_path = f'resource/image/{name.lower()}.png'
             x = start_x + (i * x_offset)
             self.characters.append(Character(name, image_path, x, start_y))
