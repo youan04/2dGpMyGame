@@ -14,6 +14,8 @@ class Character:
         self.target_x = self.x  # 이동 목표 x
         self.target_y = self.y  # 이동 목표 y
         self.speed = speed  # 이동 속도 (픽셀/frame)
+        self.max_hp = hp  # 최대 체력
+        self.current_hp = hp  # 현재 체력
 
     def set_state(self, new_state):
         if self.state != new_state:
@@ -26,7 +28,7 @@ class Character:
             self.frame = (self.frame + self.frame_speed) % 3
         else:
             self.frame = 0
-
+        
         # 이동 처리
         dx = self.target_x - self.x
         dy = self.target_y - self.y
@@ -42,6 +44,8 @@ class Character:
             self.x = self.target_x
             self.y = self.target_y
             self.set_state(f"idle_{self.state.split('_')[1]}")
+            
+        
 
     def draw(self):
         total_columns = 3
@@ -71,6 +75,20 @@ class Character:
             frame_height,
             self.x, self.y, self.width, self.height
         )
+        
+        # 체력바 그리기
+        bar_width = 40
+        bar_height = 5
+        hp_ratio = self.current_hp / self.max_hp
+        filled_width = int(bar_width * hp_ratio)
+        bar_x = self.x - bar_width // 2
+        bar_y = self.y + self.height // 2 + 5
+
+        # 체력 바의 배경 (회색)
+        #draw_rectangle(bar_x, bar_y, bar_x + bar_width, bar_y + bar_height)
+
+        # 체력 바의 현재 체력 (녹색)
+        draw_rectangle(bar_x, bar_y, bar_x + filled_width, bar_y + bar_height)
 
         # 선택된 캐릭터는 빨간색 테두리로 강조 표시
         if self.isSelected:
