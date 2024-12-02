@@ -1,3 +1,4 @@
+#global_handle.py
 from pico2d import *
 
 

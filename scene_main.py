@@ -1,3 +1,4 @@
+#scene_main.py
 from pico2d import *
 import scene_select_character, scene_select_map
 

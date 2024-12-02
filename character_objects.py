@@ -13,4 +13,3 @@ def create_characters():
         Character("guard", load_image('resource/image/guard.png'), 325, 225, attack=7, hp=10, speed=1)
     ]
     return characters
-

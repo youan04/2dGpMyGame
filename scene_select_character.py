@@ -1,3 +1,4 @@
+#scene_select_character.py
 from pico2d import *
 import global_state  # global_state.py 파일 임포트
 from character_objects import create_characters  # 캐릭터 객체 가져오기

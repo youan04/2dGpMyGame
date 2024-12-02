@@ -1,3 +1,4 @@
+#character_calss.py
 from pico2d import *
 
 class Character:
@@ -54,3 +55,21 @@ class Character:
         # 선택된 캐릭터는 빨간색 테두리로 강조 표시
         if self.isSelected:
             draw_rectangle(self.x - 50//2, self.y - 50//2, self.x + 50//2, self.y + 50//2)  # 빨간 사각형 그리기
+            
+    def move_to(self, target_x, target_y, grid_size, y_offset):
+        """캐릭터 이동 처리"""
+        start_x, start_y = self.x // grid_size, (self.y - y_offset) // grid_size
+
+        if target_x > start_x:
+            self.set_state("walk_right")
+        elif target_x < start_x:
+            self.set_state("walk_left")
+        elif target_y > start_y:
+            self.set_state("walk_up")
+        elif target_y < start_y:
+            self.set_state("walk_down")
+
+        # 이동 후 정지 상태로 전환
+        self.x = target_x * grid_size + grid_size // 2
+        self.y = target_y * grid_size + grid_size // 2 + y_offset
+        self.set_state(f"idle_{self.state.split('_')[1]}")
