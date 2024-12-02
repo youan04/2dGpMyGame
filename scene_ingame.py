@@ -3,7 +3,9 @@
 from pico2d import *
 from character_class import Character
 import global_state  # global_state.py 임포트
-
+import random
+import time
+from enemy import Enemy
 
 class SceneIngame:
     def __init__(self):
@@ -21,8 +23,19 @@ class SceneIngame:
         for i, character in enumerate(self.characters):  # global_state.selected_characters에서 직접 가져옴
             character.x = start_x + (i * x_offset)  # 캐릭터 위치 설정
             character.y = start_y  # y 좌표 설정
+            
+        self.enemies = []  # 적 객체 리스트
+        self.last_enemy_spawn_time = time.time()  # 마지막 적 생성 시간
+        self.enemy_spawn_interval = 2  # 적 생성 간격 (초)
+
 
     def update(self):
+        #적 스폰
+        current_time = time.time()
+        if current_time - self.last_enemy_spawn_time >= self.enemy_spawn_interval:
+            self.spawn_enemy()
+            self.last_enemy_spawn_time = current_time
+            
         for character in self.characters:
             character.update()  # 각 캐릭터의 애니메이션 업데이트
 
@@ -40,6 +53,45 @@ class SceneIngame:
         # 선택된 캐릭터 그리기
         for character in self.characters:
             character.draw()
+            
+        for enemy in self.enemies:
+            enemy.draw()
+            
+    def spawn_enemy(self):
+        """적 생성"""
+        empty_tiles = self.get_empty_tiles()
+        if empty_tiles:
+            spawn_tile = random.choice(empty_tiles)
+            spawn_x = spawn_tile[0] * self.grid_size + self.grid_size // 2
+            spawn_y = spawn_tile[1] * self.grid_size + self.grid_size // 2 + 100
+
+            new_enemy = Enemy(
+                name="demon",
+                position=(spawn_tile[0], spawn_tile[1]),
+                attack_power=5,
+                attack_speed=1,
+                health=100
+            )
+            self.enemies.append(new_enemy)
+            print(f"적 생성: {new_enemy.name} ({spawn_tile})")
+
+    def get_empty_tiles(self):
+        """비어 있는 타일 좌표 리스트 반환"""
+        occupied_tiles = set()
+        for character in self.characters:
+            occupied_tiles.add(((character.x - self.grid_size // 2) // self.grid_size,
+                                (character.y - 100 - self.grid_size // 2) // self.grid_size))
+
+        for enemy in self.enemies:
+            occupied_tiles.add(enemy.position)
+
+        empty_tiles = [
+            (col, row)
+            for col in range(self.board_size)
+            for row in range(self.board_size)
+            if (col, row) not in occupied_tiles
+        ]
+        return empty_tiles
 
     def change_scene(self, new_scene):
         self.__class__ = new_scene.__class__  # 새로운 씬으로 클래스 변경
@@ -90,5 +142,3 @@ class SceneIngame:
         """모든 캐릭터의 선택 상태를 해제하는 함수"""
         for character in self.characters:
             character.isSelected = False
-
-    
