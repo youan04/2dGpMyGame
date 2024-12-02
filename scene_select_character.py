@@ -89,4 +89,3 @@ class SceneCharacter:
                         else:
                             print("선택 가능한 캐릭터는 최대 4명입니다!")
                     break
-

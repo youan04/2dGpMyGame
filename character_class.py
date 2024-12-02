@@ -9,8 +9,11 @@ class Character:
         self.width, self.height = 50, 50
         self.state = "idle_up"
         self.frame = 0
-        self.frame_speed = 0.2
+        self.frame_speed = 1.0
         self.isSelected = False  # 선택된 상태를 추적
+        self.target_x = self.x  # 이동 목표 x
+        self.target_y = self.y  # 이동 목표 y
+        self.speed = speed  # 이동 속도 (픽셀/frame)
 
     def set_state(self, new_state):
         if self.state != new_state:
@@ -18,10 +21,27 @@ class Character:
             self.frame = 0  # 상태 전환 시 프레임 초기화
 
     def update(self):
+        # 프레임 업데이트
         if "walk" in self.state:
             self.frame = (self.frame + self.frame_speed) % 3
         else:
             self.frame = 0
+
+        # 이동 처리
+        dx = self.target_x - self.x
+        dy = self.target_y - self.y
+        distance = (dx ** 2 + dy ** 2) ** 0.5  # 남은 거리 계산
+
+        if distance > self.speed:  # 아직 도달하지 않았다면
+            direction_x = dx / distance
+            direction_y = dy / distance
+            self.x += direction_x * self.speed
+            self.y += direction_y * self.speed
+        else:
+            # 목표 지점에 도달하면 정지 상태로 전환
+            self.x = self.target_x
+            self.y = self.target_y
+            self.set_state(f"idle_{self.state.split('_')[1]}")
 
     def draw(self):
         total_columns = 3
@@ -57,9 +77,11 @@ class Character:
             draw_rectangle(self.x - 50//2, self.y - 50//2, self.x + 50//2, self.y + 50//2)  # 빨간 사각형 그리기
             
     def move_to(self, target_x, target_y, grid_size, y_offset):
-        """캐릭터 이동 처리"""
-        start_x, start_y = self.x // grid_size, (self.y - y_offset) // grid_size
+        """캐릭터 이동 목표 설정"""
+        self.target_x = target_x * grid_size + grid_size // 2
+        self.target_y = target_y * grid_size + grid_size // 2 + y_offset
 
+        start_x, start_y = self.x // grid_size, (self.y - y_offset) // grid_size
         if target_x > start_x:
             self.set_state("walk_right")
         elif target_x < start_x:
@@ -68,8 +90,3 @@ class Character:
             self.set_state("walk_up")
         elif target_y < start_y:
             self.set_state("walk_down")
-
-        # 이동 후 정지 상태로 전환
-        self.x = target_x * grid_size + grid_size // 2
-        self.y = target_y * grid_size + grid_size // 2 + y_offset
-        self.set_state(f"idle_{self.state.split('_')[1]}")
