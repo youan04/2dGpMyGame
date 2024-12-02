@@ -52,6 +52,18 @@ class SceneIngame:
             grid_y = (y - 100) // self.grid_size
 
             if 0 <= grid_x < self.board_size and 0 <= grid_y < self.board_size:
+                # 빈 땅인지 확인
+                target_tile_empty = True
+                clicked_character = None
+
+                for character in self.characters:
+                    if character.x == grid_x * self.grid_size + self.grid_size // 2 and \
+                    character.y == grid_y * self.grid_size + self.grid_size // 2 + 100:
+                        target_tile_empty = False
+                        clicked_character = character
+                        break
+
+                # 선택된 캐릭터를 가져옴
                 selected_character = None
                 for character in self.characters:
                     if character.isSelected:
@@ -59,14 +71,20 @@ class SceneIngame:
                         break
 
                 if selected_character:
-                    self.deselect_all_characters()
-                    selected_character.move_to(grid_x, grid_y, self.grid_size, 100)
+                    if target_tile_empty:
+                        # 빈 타일 클릭 시 선택된 캐릭터 이동
+                        self.deselect_all_characters()
+                        selected_character.move_to(grid_x, grid_y, self.grid_size, 100)
+                    else:
+                        # 다른 캐릭터 클릭 시 선택 캐릭터 변경
+                        self.deselect_all_characters()
+                        clicked_character.isSelected = True
                 else:
-                    for character in self.characters:
-                        if character.x == grid_x * self.grid_size + self.grid_size // 2 and \
-                           character.y == grid_y * self.grid_size + self.grid_size // 2 + 100:
-                            self.deselect_all_characters()
-                            character.isSelected = True
+                    # 선택된 캐릭터가 없는 경우, 클릭된 캐릭터 선택
+                    if not target_tile_empty:
+                        self.deselect_all_characters()
+                        clicked_character.isSelected = True
+
 
     def deselect_all_characters(self):
         """모든 캐릭터의 선택 상태를 해제하는 함수"""
