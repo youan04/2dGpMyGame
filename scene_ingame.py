@@ -23,6 +23,9 @@ class SceneIngame:
         for i, character in enumerate(self.characters):  # global_state.selected_characters에서 직접 가져옴
             character.x = start_x + (i * x_offset)  # 캐릭터 위치 설정
             character.y = start_y  # y 좌표 설정
+            character.target_x = character.x  # 목표 좌표도 초기화
+            character.target_y = character.y  # 목표 좌표도 초기화
+            character.set_state("idle_down")  # 초기 상태 설정
             
         self.enemies = []  # 적 객체 리스트
         self.last_enemy_spawn_time = time.time()  # 마지막 적 생성 시간

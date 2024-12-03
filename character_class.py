@@ -34,7 +34,7 @@ class Character:
         dy = self.target_y - self.y
         distance = (dx ** 2 + dy ** 2) ** 0.5  # 남은 거리 계산
 
-        if distance > self.speed:  # 아직 도달하지 않았다면
+        if "walk" in self.state and distance > self.speed:  # 아직 도달하지 않았다면
             direction_x = dx / distance
             direction_y = dy / distance
             self.x += direction_x * self.speed
