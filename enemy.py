@@ -1,5 +1,7 @@
 #enemy.py
 from pico2d import *
+import time
+
 class Enemy:
     def __init__(self, name, position, attack_power, attack_speed, health):
         """
@@ -17,31 +19,57 @@ class Enemy:
         self.health = health
         self.image = load_image('resource/image/little_dragon.png')  # 적 이미지
         self.width, self.height = 50, 50
+        self.last_attack_time = 0  # 마지막 공격 시각
         self.x = position[0] * 50 + 50 // 2
         self.y = position[1] * 50 + 50 // 2 + 100
+        
+        self.base_y = self.y  # 기본 y 위치 저장
+        self.is_shaking = False  # 흔들림 상태
+        self.shake_start_time = 0  # 흔들림 시작 시간
+        self.shake_duration = 0.2  # 흔들림 지속 시간
+        self.shake_amplitude = 8  # 흔들림 강도
 
-    def attack(self, targets, delta_time):
-        """
-        인접 타일의 적을 공격.
-        :param targets: 적들이 위치한 딕셔너리 {(x, y): Enemy}
-        :param delta_time: 게임 루프에서 지난 시간 (초)
-        """
-        # 공격 타이머 업데이트
-        self.attack_timer += delta_time
-        attack_interval = 1 / self.attack_speed  # 공격 속도에 따른 간격 계산
+    def update(self, characters):
+        """적의 상태 업데이트 및 공격"""
+        current_time = time.time()
+        
+        # 흔들림 지속 시간이 지나면 흔들림 종료
+        if self.is_shaking and current_time - self.shake_start_time > self.shake_duration:
+            self.is_shaking = False
+            self.y = self.base_y  # 원래 위치로 복원
 
-        if self.attack_timer >= attack_interval:
-            self.attack_timer -= attack_interval
-            x, y = self.position
+        # 인접한 타일에 있는 캐릭터 찾기
+        target_character = self.find_target(characters)
+        if target_character:
+            # 공격 속도에 따라 공격
+            if current_time - self.last_attack_time >= 1 / self.attack_speed:
+                self.attack(target_character)
+                self.last_attack_time = current_time
+                
+    def find_target(self, characters):
+        """인접한 타일에 있는 캐릭터 중 체력이 가장 높은 캐릭터 선택"""
+        max_health = -1
+        target_character = None
 
-            # 상하좌우 좌표
-            adjacent_positions = [(x, y - 1), (x, y + 1), (x - 1, y), (x + 1, y)]
+        for character in characters:
+            dx = abs(character.x - (self.position[0] * 50 + 25))
+            dy = abs(character.y - (self.position[1] * 50 + 125))
+            if dx <= 50 and dy <= 50:  # 인접한 타일 (최대 거리 50픽셀 기준)
+                if character.current_hp > max_health:
+                    max_health = character.current_hp
+                    target_character = character
 
-            for pos in adjacent_positions:
-                if pos in targets:  # 타겟이 있는 경우
-                    target = targets[pos]
-                    print(f"{self.name}이 {target.name}을(를) 공격합니다! (공격력: {self.attack_power})")
-                    target.take_damage(self.attack_power)
+        return target_character
+    
+    
+                
+    def attack(self, character):
+        """캐릭터 공격"""
+        
+        if character:
+            print(f"{self.name}가 {character.name}을(를) 공격합니다! (-{self.attack_power} HP)")
+            character.receive_attack(self.attack_power)
+            self.start_shaking()
 
     def take_damage(self, damage):
         """
@@ -53,6 +81,11 @@ class Enemy:
         
         if self.health <= 0:
             self.die()
+            
+    def start_shaking(self):
+        """흔들림 효과 시작"""
+        self.is_shaking = True
+        self.shake_start_time = time.time()
 
     def die(self):
         """
@@ -69,4 +102,9 @@ class Enemy:
         self.position = new_position
         
     def draw(self):
+        """적을 화면에 그리기"""
+        if self.is_shaking:
+            elapsed_time = time.time() - self.shake_start_time
+            # 흔들림 위치 계산: sin 함수로 위아래로 움직임
+            self.y = self.base_y + self.shake_amplitude * (-1 if int(elapsed_time * 10) % 2 == 0 else 1)
         self.image.draw(self.x, self.y, self.width, self.height)

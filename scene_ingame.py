@@ -29,7 +29,7 @@ class SceneIngame:
             
         self.enemies = []  # 적 객체 리스트
         self.last_enemy_spawn_time = time.time()  # 마지막 적 생성 시간
-        self.enemy_spawn_interval = 2  # 적 생성 간격 (초)
+        self.enemy_spawn_interval = 8  # 적 생성 간격 (초)
 
 
     def update(self):
@@ -41,6 +41,9 @@ class SceneIngame:
             
         for character in self.characters:
             character.update()  # 각 캐릭터의 애니메이션 업데이트
+            
+        for enemy in self.enemies:
+            enemy.update(self.characters)  # 적 업데이트 및 공격 처리
 
     def draw(self):
         clear_canvas()
@@ -69,17 +72,17 @@ class SceneIngame:
             spawn_y = spawn_tile[1] * self.grid_size + self.grid_size // 2 + 100
 
             new_enemy = Enemy(
-                name="demon",
+                name="little_dragon",
                 position=(spawn_tile[0], spawn_tile[1]),
-                attack_power=5,
-                attack_speed=1,
+                attack_power=10,
+                attack_speed=0.5,
                 health=100
             )
             self.enemies.append(new_enemy)
             print(f"적 생성: {new_enemy.name} ({spawn_tile})")
 
     def get_empty_tiles(self):
-        """비어 있는 타일 좌표 리스트 반환"""
+        #비어 있는 타일 좌표 리스트 반환
         occupied_tiles = set()
         for character in self.characters:
             occupied_tiles.add(((character.x - self.grid_size // 2) // self.grid_size,
@@ -97,8 +100,8 @@ class SceneIngame:
         return empty_tiles
 
     def change_scene(self, new_scene):
-        self.__class__ = new_scene.__class__  # 새로운 씬으로 클래스 변경
-        self.__dict__ = new_scene.__dict__  # 새로운 씬의 속성 복사
+        self.__class__ = new_scene.__class__   # 새로운 씬으로 클래스 변경
+        self.__dict__ = new_scene.__dict__   # 새로운 씬의 속성 복사
 
     def handle_event(self, event):
         if event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
