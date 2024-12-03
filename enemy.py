@@ -3,7 +3,7 @@ from pico2d import *
 import time
 
 class Enemy:
-    def __init__(self, name, position, attack_power, attack_speed, health):
+    def __init__(self, name, position, attack_power, attack_speed, hp):
         """
         Enemy 객체 초기화
         :param name: 적의 이름
@@ -16,7 +16,8 @@ class Enemy:
         self.position = position
         self.attack_power = attack_power
         self.attack_speed = attack_speed
-        self.health = health
+        self.current_hp = hp
+        self.max_hp = hp
         self.image = load_image('resource/image/little_dragon.png')  # 적 이미지
         self.width, self.height = 50, 50
         self.last_attack_time = 0  # 마지막 공격 시각
@@ -79,7 +80,7 @@ class Enemy:
         self.health -= damage
         print(f"{self.name}이(가) {damage}의 피해를 입었습니다! (남은 체력: {self.health})")
         
-        if self.health <= 0:
+        if self.current_hp <= 0:
             self.die()
             
     def start_shaking(self):
@@ -108,3 +109,15 @@ class Enemy:
             # 흔들림 위치 계산: sin 함수로 위아래로 움직임
             self.y = self.base_y + self.shake_amplitude * (-1 if int(elapsed_time * 10) % 2 == 0 else 1)
         self.image.draw(self.x, self.y, self.width, self.height)
+        
+        
+        # 체력바 그리기
+        bar_width = 40
+        bar_height = 5
+        hp_ratio = self.current_hp / self.max_hp
+        filled_width = int(bar_width * hp_ratio)
+        bar_x = self.x - bar_width // 2
+        bar_y = self.y + self.height // 2 + 5
+
+        # 체력 바의 현재 체력 (녹색)
+        draw_rectangle(bar_x, bar_y, bar_x + filled_width, bar_y + bar_height)

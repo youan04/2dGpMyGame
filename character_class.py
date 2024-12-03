@@ -112,7 +112,8 @@ class Character:
 
     def receive_attack(self, damage):
         """적으로부터 공격을 받아 HP 감소"""
-        self.current_hp -= damage
-        if self.current_hp <= 0:
-            self.current_hp = 0
-            print(f"{self.name}이(가) 쓰러졌습니다!")
+        if(self.current_hp > 0):
+            self.current_hp -= damage
+            if self.current_hp <= 0:
+                self.current_hp = 0
+                print(f"{self.name}이(가) 쓰러졌습니다!")

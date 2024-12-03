@@ -76,7 +76,7 @@ class SceneIngame:
                 position=(spawn_tile[0], spawn_tile[1]),
                 attack_power=10,
                 attack_speed=0.5,
-                health=100
+                hp=100
             )
             self.enemies.append(new_enemy)
             print(f"적 생성: {new_enemy.name} ({spawn_tile})")
