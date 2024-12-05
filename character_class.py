@@ -67,16 +67,25 @@ class Character:
             self.set_state(f"idle_{self.state.split('_')[1]}")
         
         # 적 탐색 및 공격
-        current_time = time.time()
-        if current_time - self.last_atk_time >= 1 / self.atk_speed:
-                    self.normal_attack()
-                    self.last_atk_time = current_time            
+        if "idle" in self.state:
+            current_time = time.time()
+            if current_time - self.last_atk_time >= 1 / self.atk_speed:
+                        self.normal_attack()
+                        self.last_atk_time = current_time            
         
         for projectile in self.projectiles[:]:
             projectile.update()
             if projectile.is_out_of_range():  # 범위를 벗어난 투사체는 제거
                 self.projectiles.remove(projectile)
-            
+                
+                
+        for projectile in self.projectiles[:]:  # 투사체 리스트에서 복사본을 사용하여 중간에 삭제해도 문제가 없도록
+            for enemy in enemies:
+                if projectile.check_collision(enemy):  # 충돌 발생
+                    enemy.receive_attack(projectile.damage)  # 적에게 피해를 주고
+                    self.projectiles.remove(projectile)  # 투사체 제거
+                    break  # 충돌한 첫 번째 적만 처리하고 투사체를 삭제한 후 더 이상 확인하지 않음
+                    
 
     def draw(self):
         if self.is_dead:

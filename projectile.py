@@ -10,6 +10,7 @@ class Projectile:
         self.direction = direction
         self.distance_travelled = 0  # 투사체가 이동한 거리
         self.angle = 0  # 회전 각도
+        self.flip = 'w'  # 기본 반전 없이 출력
         self.image = image  # 투사체 이미지
 
     def update(self):
@@ -19,32 +20,40 @@ class Projectile:
         self.distance_travelled += self.speed
         
         # 방향에 맞게 각도 설정
-        if self.direction == 'idle_right':
+        if self.direction == "idle_right":
             self.direction_x = 1
             self.direction_y = 0
             self.angle = 0  # 오른쪽 방향
-        elif self.direction == 'idle_left':
+            self.flip = 'w'
+        elif self.direction == "idle_left":
             self.direction_x = -1
             self.direction_y = 0
-            self.angle = 180  # 왼쪽 방향
-        elif self.direction == 'idle_up':
+            self.angle = 0  # 왼쪽 방향
+            self.flip = 'h'  # 수평 반전
+        elif self.direction == "idle_up":
             self.direction_x = 0
             self.direction_y = 1
             self.angle = 90  # 위 방향
-        elif self.direction == 'idle_down':
+            self.flip = 'w'
+        elif self.direction == "idle_down":
             self.direction_x = 0
             self.direction_y = -1
-            self.angle = 270  # 아래 방향
-
+            self.angle = 270 # 아래 방향
+            self.flip = 'w'  # flip은 'w'로 설정하고, 회전만 처리
 
     def draw(self):
         """투사체 그리기"""
-
+        # angle에 맞춰 회전된 이미지를 그린다.
         self.image.clip_composite_draw(0, 0, self.image.w, self.image.h, 
-                                       self.angle, 'w', self.x, self.y, 50, 50)
+                                       self.angle, self.flip, self.x, self.y, 50, 50)
 
     def is_out_of_range(self):
         """투사체가 지정된 범위를 벗어나면 True"""
-        print("투사체 사라짐")
         return self.distance_travelled >= self.range * 50
-       
+    
+    def check_collision(self, target):
+        # 충돌 감지 (단순히 위치가 겹치는지 확인)
+        if (self.x - 10 < target.x < self.x + 10) and (self.y - 10 < target.y < self.y + 10):
+            print("적과 충돌")
+            return True
+        return False

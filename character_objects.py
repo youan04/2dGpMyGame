@@ -7,9 +7,9 @@ import global_state
 def create_characters():
     characters = [
         Character("knight", load_image('resource/image/knight.png'), 125, 225, load_image('resource/image/knight_nomal_atk.png'), atk=20, atk_spd = 0.5, atk_length = 1, hp=500, speed=0.2, melee = True),
-        Character("archer", load_image('resource/image/archer.png'), 175, 225, load_image('resource/image/archer_nomal_atk.png'), atk=20, atk_spd = 0.5, atk_length = 9, hp=300, speed=0.4, melee = False),
-        Character("mage", load_image('resource/image/mage.png'), 225, 225, load_image('resource/image/knight_nomal_atk.png'), atk=30, atk_spd = 0.5, atk_length = 5, hp=300, speed=0.4, melee = False),
-        Character("priest", load_image('resource/image/priest.png'), 275, 225, load_image('resource/image/knight_nomal_atk.png'),atk=10, atk_spd = 0.5, atk_length = 3, hp=300, speed=0.3, melee = False),
+        Character("archer", load_image('resource/image/archer.png'), 175, 225, load_image('resource/image/archer_nomal_atk.png'), atk=20, atk_spd = 1.0, atk_length = 7, hp=100, speed=0.4, melee = False),
+        Character("mage", load_image('resource/image/mage.png'), 225, 225, load_image('resource/image/knight_nomal_atk.png'), atk=30, atk_spd = 0.5, atk_length = 5, hp=200, speed=0.4, melee = False),
+        Character("priest", load_image('resource/image/priest.png'), 275, 225, load_image('resource/image/knight_nomal_atk.png'),atk=10, atk_spd = 0.5, atk_length = 3, hp=200, speed=0.3, melee = False),
         Character("guard", load_image('resource/image/guard.png'), 325, 225, load_image('resource/image/knight_nomal_atk.png'),atk=10, atk_spd = 0.5, atk_length = 1,hp=1000, speed=0.1, melee = True)
     ]
     return characters
