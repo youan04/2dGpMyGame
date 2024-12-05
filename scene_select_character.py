@@ -28,6 +28,7 @@ class SceneCharacter:
     
         if any(character.name == button["name"] for character in global_state.selected_characters):
             # 선택된 버튼은 빨간색 테두리를 그림
+           
             draw_rectangle(button["x"] - self.button_size // 2, 
                         button["y"] - self.button_size // 2, 
                         button["x"] + self.button_size // 2, 

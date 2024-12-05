@@ -1,11 +1,15 @@
-#character_calss.py
+#character_class.py
+
 from pico2d import *
+import time
+
 
 class Character:
-    def __init__(self, name, image_path, x, y, attack, hp, speed):
+    def __init__(self, name, image_path, x, y, nomal_atk_img, atk, atk_spd, hp, speed, melee):
         self.name = name
-        self.image = image_path
+        self.image = image_path 
         self.x, self.y = x, y
+        self.position = (x, y)
         self.width, self.height = 50, 50
         self.state = "idle_up"
         self.frame = 0
@@ -13,22 +17,37 @@ class Character:
         self.isSelected = False  # 선택된 상태를 추적
         self.target_x = self.x  # 이동 목표 x
         self.target_y = self.y  # 이동 목표 y
+        self.nomal_atk_img = nomal_atk_img
         self.speed = speed  # 이동 속도 (픽셀/frame)
         self.max_hp = hp  # 최대 체력
         self.current_hp = hp  # 현재 체력
+        self.is_dead = False  # 사망 상태 추적
+        self.respawn_timer_start = None  # 부활 타이머 시작 시간
+        self.respawn_duration = 25  # 부활에 걸리는 시간 (초)
+        self.atk = atk
+        self.atk_speed = atk_spd
+        self.melee = melee
+        self.last_atk_time = 0
+        
 
     def set_state(self, new_state):
         if self.state != new_state:
             self.state = new_state
             self.frame = 0  # 상태 전환 시 프레임 초기화
 
-    def update(self):
+    def update(self, enemies):
         # 프레임 업데이트
         if "walk" in self.state:
             self.frame = (self.frame + self.frame_speed) % 3
         else:
             self.frame = 0
-        
+
+        if self.is_dead:
+            # 부활 대기 중이라면 시간 확인
+            if time.time() - self.respawn_timer_start >= self.respawn_duration:
+                self.respawn()
+            return
+
         # 이동 처리
         dx = self.target_x - self.x
         dy = self.target_y - self.y
@@ -44,10 +63,21 @@ class Character:
             self.x = self.target_x
             self.y = self.target_y
             self.set_state(f"idle_{self.state.split('_')[1]}")
-            
         
+        # 적 탐색 및 공격
+        target_enemy = self.find_target(enemies)
+        if target_enemy:
+            current_time = time.time()
+            if current_time - self.last_atk_time >= 1 / self.atk_speed:
+                self.nomal_attack(target_enemy)
+                self.last_atk_time = current_time
 
     def draw(self):
+        if self.is_dead:
+            # 사망 상태에서는 부활 게이지 표시
+            self.draw_respawn_gauge()
+            return
+
         total_columns = 3
         total_rows = 4
         frame_int = int(self.frame)
@@ -75,8 +105,17 @@ class Character:
             frame_height,
             self.x, self.y, self.width, self.height
         )
-        
+
         # 체력바 그리기
+        self.draw_health_bar()
+
+        # 선택된 캐릭터는 빨간색 테두리로 강조 표시
+        if self.isSelected:
+            draw_rectangle(self.x - self.width // 2, self.y - self.height // 2,
+                           self.x + self.width // 2, self.y + self.height // 2)  # 빨간 사각형 그리기
+
+    def draw_health_bar(self):
+        """체력바 그리기"""
         bar_width = 40
         bar_height = 5
         hp_ratio = self.current_hp / self.max_hp
@@ -84,18 +123,31 @@ class Character:
         bar_x = self.x - bar_width // 2
         bar_y = self.y + self.height // 2 + 5
 
-        # 체력 바의 배경 (회색)
-        #draw_rectangle(bar_x, bar_y, bar_x + bar_width, bar_y + bar_height)
-
         # 체력 바의 현재 체력 (녹색)
         draw_rectangle(bar_x, bar_y, bar_x + filled_width, bar_y + bar_height)
 
-        # 선택된 캐릭터는 빨간색 테두리로 강조 표시
-        if self.isSelected:
-            draw_rectangle(self.x - 50//2, self.y - 50//2, self.x + 50//2, self.y + 50//2)  # 빨간 사각형 그리기
-            
+    def draw_respawn_gauge(self):
+        """부활 게이지 표시"""
+        gauge_width = 50
+        gauge_height = 10
+        elapsed_time = time.time() - self.respawn_timer_start
+        fill_ratio = elapsed_time / self.respawn_duration
+        filled_width = int(gauge_width * fill_ratio)
+
+        gauge_x = self.x - gauge_width // 2
+        gauge_y = self.y
+
+        # 게이지 배경 (회색)
+        draw_rectangle(gauge_x, gauge_y, gauge_x + gauge_width, gauge_y + gauge_height)
+
+        # 현재 게이지 상태 (노란색)
+        draw_rectangle(gauge_x, gauge_y, gauge_x + filled_width, gauge_y + gauge_height)
+
     def move_to(self, target_x, target_y, grid_size, y_offset):
         """캐릭터 이동 목표 설정"""
+        if self.is_dead:
+            return  # 사망 상태에서는 이동 불가
+
         self.target_x = target_x * grid_size + grid_size // 2
         self.target_y = target_y * grid_size + grid_size // 2 + y_offset
 
@@ -109,11 +161,47 @@ class Character:
         elif target_y < start_y:
             self.set_state("walk_down")
 
-
     def receive_attack(self, damage):
         """적으로부터 공격을 받아 HP 감소"""
-        if(self.current_hp > 0):
+        if self.current_hp > 0:
             self.current_hp -= damage
+            print(f"{self.name}이(가) {damage}의 피해를 입었습니다! (남은 체력: {self.current_hp})")
             if self.current_hp <= 0:
                 self.current_hp = 0
                 print(f"{self.name}이(가) 쓰러졌습니다!")
+                self.die()
+                
+    def nomal_attack(self, target_enemy):
+        """적 공격"""
+        if target_enemy:
+            print(f"{self.name}가 {target_enemy.name}을(를) 공격합니다! (-{self.atk} HP)")
+            target_enemy.receive_attack(self.atk)
+
+            
+    def find_target(self, enemies):
+        """인접한 타일에 있는 적 중 체력이 가장 낮은 적 선택"""
+        min_distance = float('inf')
+        target_enemy = None
+
+        for enemy in enemies:
+            dx = abs(enemy.x - self.x)
+            dy = abs(enemy.y - self.y)
+            distance = (dx ** 2 + dy ** 2) ** 0.5
+            if distance <= 50 and enemy.current_hp > 0:  # 공격 가능한 범위 내
+                if distance < min_distance:
+                    min_distance = distance
+                    target_enemy = enemy
+
+        return target_enemy
+        
+    def die(self):
+        """캐릭터 사망 처리"""
+        self.is_dead = True
+        self.respawn_timer_start = time.time()  # 부활 타이머 시작
+        self.current_hp = 0  # 체력 0으로 설정
+
+    def respawn(self):
+        """캐릭터 부활"""
+        print(f"{self.name}이(가) 부활했습니다!")
+        self.is_dead = False
+        self.current_hp = self.max_hp // 2  # 체력의 50%로 부활

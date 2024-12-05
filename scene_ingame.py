@@ -40,10 +40,12 @@ class SceneIngame:
             self.last_enemy_spawn_time = current_time
             
         for character in self.characters:
-            character.update()  # 각 캐릭터의 애니메이션 업데이트
+            character.update(self.enemies)  # 각 캐릭터의 애니메이션 업데이트
             
-        for enemy in self.enemies:
-            enemy.update(self.characters)  # 적 업데이트 및 공격 처리
+        for enemy in self.enemies[:]:
+            result = enemy.update(self.characters)
+            if result == "remove":  # 적이 제거 대상이면
+                self.enemies.remove(enemy)  # 리스트에서 제거
 
     def draw(self):
         clear_canvas()
@@ -74,7 +76,7 @@ class SceneIngame:
             new_enemy = Enemy(
                 name="little_dragon",
                 position=(spawn_tile[0], spawn_tile[1]),
-                attack_power=10,
+                attack_power=30,
                 attack_speed=0.5,
                 hp=100
             )

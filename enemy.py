@@ -24,6 +24,8 @@ class Enemy:
         self.x = position[0] * 50 + 50 // 2
         self.y = position[1] * 50 + 50 // 2 + 100
         
+        self.is_dead = False  # 적이 살아 있는 상태
+        
         self.base_y = self.y  # 기본 y 위치 저장
         self.is_shaking = False  # 흔들림 상태
         self.shake_start_time = 0  # 흔들림 시작 시간
@@ -44,9 +46,13 @@ class Enemy:
         if target_character:
             # 공격 속도에 따라 공격
             if current_time - self.last_attack_time >= 1 / self.attack_speed:
-                self.attack(target_character)
+                self.nomal_attack(target_character)
                 self.last_attack_time = current_time
-                
+            
+        #사망 코드
+        if self.is_dead:
+            return "remove"  # 'remove' 신호를 반환
+            return
     def find_target(self, characters):
         """인접한 타일에 있는 캐릭터 중 체력이 가장 높은 캐릭터 선택"""
         max_health = -1
@@ -64,7 +70,7 @@ class Enemy:
     
     
                 
-    def attack(self, character):
+    def nomal_attack(self, character):
         """캐릭터 공격"""
         
         if character:
@@ -72,17 +78,17 @@ class Enemy:
             character.receive_attack(self.attack_power)
             self.start_shaking()
 
-    def take_damage(self, damage):
-        """
-        적이 피해를 입었을 때 호출.
-        :param damage: 받은 피해량
-        """
-        self.health -= damage
-        print(f"{self.name}이(가) {damage}의 피해를 입었습니다! (남은 체력: {self.health})")
-        
-        if self.current_hp <= 0:
-            self.die()
             
+    def receive_attack(self, damage):
+        """적으로부터 공격을 받아 HP 감소"""
+        if self.current_hp > 0:
+            self.current_hp -= damage
+            print(f"{self.name}이(가) {damage}의 피해를 입었습니다! (남은 체력: {self.current_hp})")
+            if self.current_hp <= 0:
+                self.current_hp = 0
+                print(f"{self.name}이(가) 쓰러졌습니다!")
+                self.die()
+                
     def start_shaking(self):
         """흔들림 효과 시작"""
         self.is_shaking = True
@@ -92,6 +98,7 @@ class Enemy:
         """
         적이 사망했을 때 호출.
         """
+        self.is_dead = True
         print(f"{self.name}이(가) 사망했습니다!")
 
     def move_to(self, new_position):
@@ -119,5 +126,4 @@ class Enemy:
         bar_x = self.x - bar_width // 2
         bar_y = self.y + self.height // 2 + 5
 
-        # 체력 바의 현재 체력 (녹색)
         draw_rectangle(bar_x, bar_y, bar_x + filled_width, bar_y + bar_height)
