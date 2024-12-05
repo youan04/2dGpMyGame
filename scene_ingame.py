@@ -6,6 +6,7 @@ import global_state  # global_state.py 임포트
 import random
 import time
 from enemy import Enemy
+import scene_game_end
 
 class SceneIngame:
     def __init__(self):
@@ -13,6 +14,9 @@ class SceneIngame:
         self.tile = load_image('resource/image/stone_tile.png')
         self.board_size = 8
         self.grid_size = 50
+        
+        self.start_time = time.time()  # 시작 시간
+        self.time_limit = 10  # 제한 시간 (초)
 
         # 선택된 캐릭터를 기반으로 이미 global_state에서 캐릭터들이 존재하므로
         self.characters = global_state.selected_characters  # 이미 선택된 Character 객체를 그대로 사용
@@ -35,6 +39,13 @@ class SceneIngame:
     def update(self):
         #적 스폰
         current_time = time.time()
+        elapsed_time = current_time - self.start_time  # 경과 시간
+        remaining_time = self.time_limit - elapsed_time  # 남은 시간 계산
+        
+        if remaining_time <= 0:
+            self.change_scene(scene_game_end.SceneGameEnd())  # 타이머가 끝나면 게임 종료 씬으로 변경
+
+            
         if current_time - self.last_enemy_spawn_time >= self.enemy_spawn_interval:
             self.spawn_enemy()
             self.last_enemy_spawn_time = current_time
@@ -46,10 +57,18 @@ class SceneIngame:
             result = enemy.update(self.characters)
             if result == "remove":  # 적이 제거 대상이면
                 self.enemies.remove(enemy)  # 리스트에서 제거
+                
 
     def draw(self):
         clear_canvas()
         self.image.draw(200, 350, 400, 700)  # 배경 이미지
+        
+        current_time = time.time()
+        time_left = max(0, int(self.time_limit - (current_time - self.start_time)))
+
+        # 타이머 출력
+        font = load_font('C:/Windows/Fonts/Consola.ttf', 30)
+        font.draw(10, 675, f"Time: {time_left}s", (255, 255, 255))
 
         # 보드판 그리기
         for row in range(self.board_size):
@@ -102,9 +121,8 @@ class SceneIngame:
         return empty_tiles
 
     def change_scene(self, new_scene):
-        self.__class__ = new_scene.__class__   # 새로운 씬으로 클래스 변경
-        self.__dict__ = new_scene.__dict__   # 새로운 씬의 속성 복사
-
+        global_state.current_scene 
+        global_state.current_scene = new_scene  # 전역 current_scene을 새로운 씬으로 교체
     def handle_event(self, event):
         if event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
             x, y = event.x, 700 - event.y
