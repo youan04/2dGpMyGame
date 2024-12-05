@@ -2,10 +2,11 @@
 
 from pico2d import *
 import time
+from projectile import Projectile
 
 
 class Character:
-    def __init__(self, name, image_path, x, y, nomal_atk_img, atk, atk_spd, hp, speed, melee):
+    def __init__(self, name, image_path, x, y, nomal_atk_img, atk, atk_spd, atk_length, hp, speed, melee):
         self.name = name
         self.image = image_path 
         self.x, self.y = x, y
@@ -26,9 +27,10 @@ class Character:
         self.respawn_duration = 25  # 부활에 걸리는 시간 (초)
         self.atk = atk
         self.atk_speed = atk_spd
+        self.atk_length = atk_length
         self.melee = melee
         self.last_atk_time = 0
-        
+        self.projectiles = []  # <--- 이 줄을 추가하여 투사체 리스트를 초기화합니다.
 
     def set_state(self, new_state):
         if self.state != new_state:
@@ -65,12 +67,16 @@ class Character:
             self.set_state(f"idle_{self.state.split('_')[1]}")
         
         # 적 탐색 및 공격
-        target_enemy = self.find_target(enemies)
-        if target_enemy:
-            current_time = time.time()
-            if current_time - self.last_atk_time >= 1 / self.atk_speed:
-                self.nomal_attack(target_enemy)
-                self.last_atk_time = current_time
+        current_time = time.time()
+        if current_time - self.last_atk_time >= 1 / self.atk_speed:
+                    self.normal_attack()
+                    self.last_atk_time = current_time            
+        
+        for projectile in self.projectiles[:]:
+            projectile.update()
+            if projectile.is_out_of_range():  # 범위를 벗어난 투사체는 제거
+                self.projectiles.remove(projectile)
+            
 
     def draw(self):
         if self.is_dead:
@@ -108,6 +114,10 @@ class Character:
 
         # 체력바 그리기
         self.draw_health_bar()
+        
+        for projectile in self.projectiles:
+            projectile.draw()
+
 
         # 선택된 캐릭터는 빨간색 테두리로 강조 표시
         if self.isSelected:
@@ -171,11 +181,31 @@ class Character:
                 print(f"{self.name}이(가) 쓰러졌습니다!")
                 self.die()
                 
-    def nomal_attack(self, target_enemy):
-        """적 공격"""
-        if target_enemy:
-            print(f"{self.name}가 {target_enemy.name}을(를) 공격합니다! (-{self.atk} HP)")
-            target_enemy.receive_attack(self.atk)
+    def normal_attack(self):
+        """투사체를 생성하여 발사"""
+        current_time = time.time()
+        if current_time - self.last_atk_time < 1 / self.atk_speed:
+            return  # 공격 속도에 맞춰 공격을 제한
+
+        # 투사체의 방향 설정
+        if "right" in self.state:
+            direction_x = 1
+            direction_y = 0
+        elif "left" in self.state:
+            direction_x = -1
+            direction_y = 0
+        elif "up" in self.state:
+            direction_x = 0
+            direction_y = 1
+        elif "down" in self.state:
+            direction_x = 0
+            direction_y = -1
+
+        # 투사체 생성 (현재 위치에서 방향, 속도, 범위 등 설정)
+        projectile = Projectile(self.x, self.y, direction_x, direction_y, 1, self.atk_length, self.atk, self.state, self.nomal_atk_img)
+        self.projectiles.append(projectile)
+        
+        self.last_atk_time = current_time  # 공격한 시간 갱신
 
             
     def find_target(self, enemies):
