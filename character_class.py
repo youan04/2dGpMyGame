@@ -211,27 +211,27 @@ class Character:
             direction_y = -1
 
         # 투사체 생성 (현재 위치에서 방향, 속도, 범위 등 설정)
-        projectile = Projectile(self.x, self.y, direction_x, direction_y, 1, self.atk_length, self.atk, self.state, self.nomal_atk_img)
+        projectile = Projectile(self.x, self.y, direction_x, direction_y, 2, self.atk_length, self.atk, self.state, self.nomal_atk_img)
         self.projectiles.append(projectile)
         
         self.last_atk_time = current_time  # 공격한 시간 갱신
 
             
-    def find_target(self, enemies):
-        """인접한 타일에 있는 적 중 체력이 가장 낮은 적 선택"""
-        min_distance = float('inf')
-        target_enemy = None
+    # def find_target(self, enemies):
+    #     """인접한 타일에 있는 적 중 체력이 가장 낮은 적 선택"""
+    #     min_distance = float('inf')
+    #     target_enemy = None
 
-        for enemy in enemies:
-            dx = abs(enemy.x - self.x)
-            dy = abs(enemy.y - self.y)
-            distance = (dx ** 2 + dy ** 2) ** 0.5
-            if distance <= 50 and enemy.current_hp > 0:  # 공격 가능한 범위 내
-                if distance < min_distance:
-                    min_distance = distance
-                    target_enemy = enemy
+    #     for enemy in enemies:
+    #         dx = abs(enemy.x - self.x)
+    #         dy = abs(enemy.y - self.y)
+    #         distance = (dx ** 2 + dy ** 2) ** 0.5
+    #         if distance <= 50 and enemy.current_hp > 0:  # 공격 가능한 범위 내
+    #             if distance < min_distance:
+    #                 min_distance = distance
+    #                 target_enemy = enemy
 
-        return target_enemy
+    #     return target_enemy
         
     def die(self):
         """캐릭터 사망 처리"""

@@ -12,11 +12,12 @@ class SceneIngame:
     def __init__(self):
         self.image = load_image('resource/image/demon.png')
         self.tile = load_image('resource/image/stone_tile.png')
+        self.font = load_font('C:/Windows/Fonts/Consola.ttf', 30)
         self.board_size = 8
         self.grid_size = 50
         
         self.start_time = time.time()  # 시작 시간
-        self.time_limit = 10  # 제한 시간 (초)
+        self.time_limit = 300  # 제한 시간 (초)
 
         # 선택된 캐릭터를 기반으로 이미 global_state에서 캐릭터들이 존재하므로
         self.characters = global_state.selected_characters  # 이미 선택된 Character 객체를 그대로 사용
@@ -33,7 +34,7 @@ class SceneIngame:
             
         self.enemies = []  # 적 객체 리스트
         self.last_enemy_spawn_time = time.time()  # 마지막 적 생성 시간
-        self.enemy_spawn_interval = 3  # 적 생성 간격 (초)
+        self.enemy_spawn_interval = 8  # 적 생성 간격 (초)
 
 
     def update(self):
@@ -67,8 +68,8 @@ class SceneIngame:
         time_left = max(0, int(self.time_limit - (current_time - self.start_time)))
 
         # 타이머 출력
-        font = load_font('C:/Windows/Fonts/Consola.ttf', 30)
-        font.draw(10, 675, f"Time: {time_left}s", (255, 255, 255))
+        
+        self.font.draw(10, 675, f"Time: {time_left}s", (255, 255, 255))
 
         # 보드판 그리기
         for row in range(self.board_size):
