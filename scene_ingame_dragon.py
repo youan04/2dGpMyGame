@@ -8,9 +8,9 @@ import time
 from enemy import Enemy
 import scene_game_end
 
-class SceneIngame:
+class SceneIngameDragon:
     def __init__(self):
-        self.image = load_image('resource/image/demon.png')
+        self.image = load_image('resource/image/boss_demon.png')
         self.tile = load_image('resource/image/stone_tile.png')
         self.font = load_font('C:/Windows/Fonts/Consola.ttf', 30)
         self.board_size = 8
