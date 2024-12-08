@@ -7,6 +7,8 @@ import random
 import time
 from enemy import Enemy
 import scene_game_end
+from boss_class import Boss
+from boss_dragon import Dragon  # Dragon 클래스를 임포트
 
 class SceneIngame:
     def __init__(self):
@@ -35,6 +37,8 @@ class SceneIngame:
         self.enemies = []  # 적 객체 리스트
         self.last_enemy_spawn_time = time.time()  # 마지막 적 생성 시간
         self.enemy_spawn_interval = 8  # 적 생성 간격 (초)
+        
+        self.spawn_boss()
 
 
     def update(self):
@@ -58,6 +62,9 @@ class SceneIngame:
             result = enemy.update(self.characters)
             if result == "remove":  # 적이 제거 대상이면
                 self.enemies.remove(enemy)  # 리스트에서 제거
+                
+        if hasattr(self, 'boss'):  # 보스가 생성되었으면 업데이트
+            self.boss.update(self.enemies)
                 
 
     def draw(self):
@@ -84,6 +91,23 @@ class SceneIngame:
             
         for enemy in self.enemies:
             enemy.draw()
+            
+        if hasattr(self, 'boss'):  # 보스가 있다면
+            self.boss.draw()
+            
+    def spawn_boss(self):
+        """보스 생성 (selected_boss에 따라)"""
+        if global_state.selected_boss == "dragon":
+            self.boss = Dragon(
+                name="Dragon",
+                image_path=load_image("resource/image/boss_dragon.png"),  # 드래곤 이미지 경로
+                x=200,
+                y=570,
+                hp=1000,
+                atk=50,
+                atk_speed=1.0
+            )
+            print(f"{self.boss.name}이(가) 생성되었습니다!")
             
     def spawn_enemy(self):
         """적 생성"""
@@ -169,3 +193,4 @@ class SceneIngame:
         """모든 캐릭터의 선택 상태를 해제하는 함수"""
         for character in self.characters:
             character.isSelected = False
+
