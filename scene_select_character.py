@@ -50,11 +50,12 @@ class SceneCharacter:
 
     def draw_selected_characters(self):
         # 선택된 캐릭터들을 화면 아래에 그리기
-        x_offset = 200  # 캐릭터들 간의 간격
-        y_position = 400  # 화면 아래 y 위치
+        x_offset = 275  # 캐릭터들 간의 간격
+        y_position = 100  # 화면 아래 y 위치
         for character in global_state.selected_characters:
             character.x = x_offset - 200  # x 좌표 설정
             character.y = y_position  # y 좌표 설정
+            character.state = "walk_down"  # y 좌표 설정
             character.draw()  # 캐릭터 그리기
             x_offset += 75  # 캐릭터 간의 간격을 75로 설정
             

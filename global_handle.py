@@ -18,6 +18,6 @@ def handle_event(current_scene, event):
             import scene_select_map
             current_scene.change_scene(scene_select_map.SceneSelect())  # 선택 씬으로 전환
         elif event.key == SDLK_v:  # '4' 키 처리
-            import scene_ingame_dragon
-            current_scene.change_scene(scene_ingame_dragon.SceneIngameDragon())  # 게임 씬으로 전환
+            import scene_ingame
+            current_scene.change_scene(scene_ingame.SceneIngame())  # 게임 씬으로 전환
     return True

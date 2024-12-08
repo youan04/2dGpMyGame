@@ -8,7 +8,7 @@ import time
 from enemy import Enemy
 import scene_game_end
 
-class SceneIngameDragon:
+class SceneIngame:
     def __init__(self):
         self.image = load_image('resource/image/boss_demon.png')
         self.tile = load_image('resource/image/stone_tile.png')
