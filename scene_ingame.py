@@ -19,7 +19,7 @@ class SceneIngame:
         self.grid_size = 50
         
         self.start_time = time.time()  # 시작 시간
-        self.time_limit = 300  # 제한 시간 (초)
+        self.time_limit = 180  # 제한 시간 (초)
 
         # 선택된 캐릭터를 기반으로 이미 global_state에서 캐릭터들이 존재하므로
         self.characters = global_state.selected_characters  # 이미 선택된 Character 객체를 그대로 사용
@@ -56,7 +56,7 @@ class SceneIngame:
             self.last_enemy_spawn_time = current_time
             
         for character in self.characters:
-            character.update(self.enemies)  # 각 캐릭터의 애니메이션 업데이트
+            character.update(self.enemies, self.boss)  # 각 캐릭터의 애니메이션 업데이트
             
         for enemy in self.enemies[:]:
             result = enemy.update(self.characters)
@@ -193,4 +193,3 @@ class SceneIngame:
         """모든 캐릭터의 선택 상태를 해제하는 함수"""
         for character in self.characters:
             character.isSelected = False
-

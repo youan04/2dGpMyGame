@@ -53,7 +53,7 @@ class Projectile:
     
     def check_collision(self, target):
         # 충돌 감지 (단순히 위치가 겹치는지 확인)
-        if (self.x - 10 < target.x < self.x + 10) and (self.y - 10 < target.y < self.y + 10):
+        if (self.x - target.width//2 < target.x < self.x + target.width//2) and (self.y - target.height//2 < target.y < self.y + target.height//2):
             print("적과 충돌")
             return True
         return False

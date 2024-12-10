@@ -7,7 +7,7 @@ class Boss:
         self.name = name
         self.image = image_path
         self.x, self.y = x, y
-        self.width, self.height = 200, 200  # 보스는 캐릭터보다 크기가 큼
+        self.width, self.height = 180, 180  # 보스는 캐릭터보다 크기가 큼
         self.max_hp = hp
         self.current_hp = hp
         self.atk = atk
@@ -71,7 +71,7 @@ class Boss:
 
     def draw_health_bar(self):
         """보스 체력 바 그리기"""
-        bar_width = 150
+        bar_width = 300
         bar_height = 10
         hp_ratio = self.current_hp / self.max_hp
         filled_width = int(bar_width * hp_ratio)

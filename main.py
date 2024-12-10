@@ -13,7 +13,7 @@ def main():
     while running:
         global_state.current_scene.update()  # 현재 씬 업데이트
         global_state.current_scene.draw()    # 현재 씬 그리기
-        
+    
         update_canvas()         # 캔버스 업데이트
         
         events = get_events()   # 이벤트 처리

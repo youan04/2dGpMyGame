@@ -37,7 +37,7 @@ class Character:
             self.state = new_state
             self.frame = 0  # 상태 전환 시 프레임 초기화
 
-    def update(self, enemies):
+    def update(self, enemies, boss):
         # 프레임 업데이트
         if "walk" in self.state:
             self.frame = (self.frame + self.frame_speed) % 3
@@ -85,6 +85,15 @@ class Character:
                     enemy.receive_attack(projectile.damage)  # 적에게 피해를 주고
                     self.projectiles.remove(projectile)  # 투사체 제거
                     break  # 충돌한 첫 번째 적만 처리하고 투사체를 삭제한 후 더 이상 확인하지 않음
+                
+            if projectile.check_collision(boss):  # 충돌 발생
+                boss.receive_attack(projectile.damage)  # 보스에게 피해를 주고
+                self.projectiles.remove(projectile)  # 투사체 제거
+                break
+                # 충돌한 첫 번째 적만 처리하고 투사체를 삭제한 후 더 이상 확인하지 않음
+                
+     
+            
                     
 
     def draw(self):
