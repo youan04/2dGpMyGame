@@ -33,6 +33,8 @@ class SceneIngame:
             character.target_x = character.x  # 목표 좌표도 초기화
             character.target_y = character.y  # 목표 좌표도 초기화
             character.set_state("idle_up")  # 초기 상태 설정
+            character.is_dead = False
+            character.current_hp = character.max_hp
             
         self.enemies = []  # 적 객체 리스트
         self.last_enemy_spawn_time = time.time()  # 마지막 적 생성 시간
@@ -103,7 +105,7 @@ class SceneIngame:
                 image_path=load_image("resource/image/boss_dragon.png"),  # 드래곤 이미지 경로
                 x=200,
                 y=570,
-                hp=1000,
+                hp=4000,
                 atk=50,
                 atk_speed=1.0
             )
