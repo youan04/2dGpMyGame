@@ -3,6 +3,8 @@
 from pico2d import *
 import scene_main
 from character_class import Character
+import sys
+import os
 
 def resource_path(relative_path):
     try:

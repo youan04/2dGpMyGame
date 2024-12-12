@@ -3,6 +3,8 @@ from pico2d import *
 import global_state  # global_state.py 파일 임포트
 from character_objects import create_characters  # 캐릭터 객체 가져오기
 import scene_main
+import sys
+import os
 
 def resource_path(relative_path):
     try:    

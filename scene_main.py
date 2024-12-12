@@ -1,6 +1,8 @@
 #scene_main.py
 from pico2d import *
 import scene_select_character, scene_select_map
+import sys
+import os
 
 def resource_path(relative_path):
     try:    
@@ -21,7 +23,7 @@ class SceneMain:
         self.character_button_x, self.character_button_y = 300, 150
         self.button_width, self.button_height = 100, 100  # 버튼의 가로세로 크기 설정
         
-        self.bgm = load_music(resource_path('resource/sound/게임 시작!.mp3'))  # BGM 파일 로드
+        self.bgm = load_music(resource_path('resource/sound/game_start.mp3'))  # BGM 파일 로드
         self.bgm.set_volume(64)  # 볼륨 설정 (0~128)
         self.bgm.repeat_play()  # 반복 재생
 

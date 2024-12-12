@@ -9,6 +9,8 @@ from enemy import Enemy
 import scene_game_end
 from boss_class import Boss
 from boss_dragon import Dragon  # Dragon 클래스를 임포트
+import sys
+import os
 
 def resource_path(relative_path):
     try:    
@@ -28,7 +30,7 @@ class SceneIngame:
         self.grid_size = 50
         self.buttons = []  # 스킬 버튼들을 저장할 리스트
         
-        self.bgm = load_music(resource_path('resource/sound/마왕의 군대.wav')) # BGM 파일 로드
+        self.bgm = load_music(resource_path('resource/sound/ingame.wav')) # BGM 파일 로드
         self.bgm.set_volume(40)  # 볼륨 설정 (0~128)
         self.bgm.repeat_play()  # 반복 재생
         

@@ -2,6 +2,8 @@ import global_state
 import scene_ingame
 from pico2d import *
 import scene_main
+import sys
+import os
 
 def resource_path(relative_path):
     try:    

@@ -1,6 +1,8 @@
 #enemy.py
 from pico2d import *
 import time
+import sys
+import os
 
 def resource_path(relative_path):
     try:

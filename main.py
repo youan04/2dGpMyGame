@@ -5,6 +5,7 @@ import scene_main, scene_select_character, scene_select_map, scene_ingame
 import character_class
 import global_state
 
+
 def main():
     open_canvas(400, 700)  # 캔버스 크기 설정
     global_state.current_scene = scene_main.SceneMain()  # 처음에 메인 씬으로 시작
