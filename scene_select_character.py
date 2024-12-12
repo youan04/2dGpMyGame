@@ -2,12 +2,13 @@
 from pico2d import *
 import global_state  # global_state.py 파일 임포트
 from character_objects import create_characters  # 캐릭터 객체 가져오기
+import scene_main
 
 class SceneCharacter:
     def __init__(self):
         # 캐릭터 씬 이미지 로드
         self.image = load_image('resource/image/door.png')  
-        
+        self.home = load_image('resource/image/home.png')
         # 버튼 위치와 크기
         self.buttons = [
             {"name": "knight", "x": 75, "y": 575, "image": load_image('resource/image/knight.png')},
@@ -45,13 +46,13 @@ class SceneCharacter:
             self.button_size, 
             self.button_size
         )
-        
+        self.home.draw(200, 100, 100, 100)
         self.draw_selected_characters()
 
     def draw_selected_characters(self):
         # 선택된 캐릭터들을 화면 아래에 그리기
         x_offset = 275  # 캐릭터들 간의 간격
-        y_position = 100  # 화면 아래 y 위치
+        y_position = 150  # 화면 아래 y 위치
         for character in global_state.selected_characters:
             character.x = x_offset - 200  # x 좌표 설정
             character.y = y_position  # y 좌표 설정
@@ -72,24 +73,32 @@ class SceneCharacter:
     def handle_event(self, event):
         if event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
             x, y = event.x, 700 - event.y  # y 좌표 반전
-            for button in self.buttons:
-                bx, by = button["x"], button["y"]
-                # 버튼 클릭 여부 확인
-                if (bx - self.button_size // 2 <= x <= bx + self.button_size // 2 and
-                        by - self.button_size // 2 <= y <= by + self.button_size // 2):
-                    character = self.character_objects[button["name"]]
-                    # 'name' 속성을 이용하여 selected_characters 비교
-                    if any(c.name == character.name for c in global_state.selected_characters):
-                        # 이미 선택된 캐릭터라면 배열에서 제거
-                        global_state.selected_characters = [
-                            c for c in global_state.selected_characters if c.name != character.name
-                        ]
-                        print(f"{character.name} 제거")
-                    else:
-                        # 선택 가능한 공간이 있다면 배열에 추가
-                        if len(global_state.selected_characters) < 4:
-                            global_state.selected_characters.append(character)
-                            print(f"{character.name} 추가")
+            
+            home_button_x, home_button_y, home_button_width, home_button_height = 200, 100, 100, 100
+        
+            # 클릭된 좌표가 버튼 안에 있으면
+            if home_button_x - 50 <= x <= home_button_x + 50 and \
+                home_button_y - 50 <= y <= home_button_y + 50:
+                self.change_scene(scene_main.SceneMain())  # 선택 씬으로 전환 
+            else:    
+                for button in self.buttons:
+                    bx, by = button["x"], button["y"]
+                    # 버튼 클릭 여부 확인
+                    if (bx - self.button_size // 2 <= x <= bx + self.button_size // 2 and
+                            by - self.button_size // 2 <= y <= by + self.button_size // 2):
+                        character = self.character_objects[button["name"]]
+                        # 'name' 속성을 이용하여 selected_characters 비교
+                        if any(c.name == character.name for c in global_state.selected_characters):
+                            # 이미 선택된 캐릭터라면 배열에서 제거
+                            global_state.selected_characters = [
+                                c for c in global_state.selected_characters if c.name != character.name
+                            ]
+                            print(f"{character.name} 제거")
                         else:
-                            print("선택 가능한 캐릭터는 최대 4명입니다!")
-                    break
+                            # 선택 가능한 공간이 있다면 배열에 추가
+                            if len(global_state.selected_characters) < 4:
+                                global_state.selected_characters.append(character)
+                                print(f"{character.name} 추가")
+                            else:
+                                print("선택 가능한 캐릭터는 최대 4명입니다!")
+                        break

@@ -1,6 +1,7 @@
 import global_state
 import scene_ingame
 from pico2d import *
+import scene_main
 
 class SceneSelect:
     def __init__(self):
@@ -9,6 +10,7 @@ class SceneSelect:
             {"name": "dragon", "x": 100, "y": 575, "image": load_image('resource/image/boss_dragon.png')},
             #{"name": "demon", "x": 100, "y": 450, "image": load_image('resource/image/boss_demon.png')},
         ]
+        self.home = load_image('resource/image/home.png')
         self.button_size = 250  # 버튼 크기
 
     def update(self):
@@ -31,6 +33,7 @@ class SceneSelect:
             self.button_size,
             self.button_size,
         )
+        self.home.draw(200, 100, 100, 100)
 
     def change_scene(self, new_scene):
         self.__class__ = new_scene.__class__  # 새로운 씬으로 클래스 변경
@@ -44,3 +47,11 @@ class SceneSelect:
                    button["y"] - self.button_size // 2 < y < button["y"] + self.button_size // 2:
                     global_state.selected_boss = button["name"]  # 선택된 보스 설정
                     global_state.current_scene = scene_ingame.SceneIngame()  # 씬 전환
+                    
+            home_button_x, home_button_y, home_button_width, home_button_height = 200, 100, 100, 100
+        
+            # 클릭된 좌표가 버튼 안에 있으면
+            if home_button_x - 50 <= x <= home_button_x + 50 and \
+                home_button_y - 50 <= y <= home_button_y + 50:
+                self.change_scene(scene_main.SceneMain())  # 선택 씬으로 전환 
+            
