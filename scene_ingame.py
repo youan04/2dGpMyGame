@@ -66,7 +66,7 @@ class SceneIngame:
                 self.enemies.remove(enemy)  # 리스트에서 제거
                 
         if hasattr(self, 'boss'):  # 보스가 생성되었으면 업데이트
-            self.boss.update(self.enemies)
+            self.boss.update(self.characters)
                 
 
     def draw(self):
@@ -106,7 +106,7 @@ class SceneIngame:
                 x=200,
                 y=570,
                 hp=4000,
-                atk=50,
+                atk=500,
                 atk_speed=1.0
             )
             print(f"{self.boss.name}이(가) 생성되었습니다!")

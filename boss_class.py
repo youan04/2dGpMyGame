@@ -20,7 +20,7 @@ class Boss:
         self.last_atk_time = 0
         self.projectiles = []  # 보스의 공격(투사체) 저장
 
-    def update(self, enemies):
+    def update(self, chracters):
         """보스 상태 업데이트"""
         if self.is_dead:
             return
@@ -34,17 +34,6 @@ class Boss:
         # 공격 처리
         current_time = time.time()
 
-        # 투사체 업데이트
-        for projectile in self.projectiles[:]:
-            projectile.update()
-            if projectile.is_out_of_range():
-                self.projectiles.remove(projectile)
-            else:
-                for enemy in enemies:
-                    if projectile.check_collision(enemy):
-                        enemy.receive_attack(self.atk)
-                        self.projectiles.remove(projectile)
-                        break
 
     def draw(self):
         """보스 그리기"""
