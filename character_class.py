@@ -6,7 +6,7 @@ from projectile import Projectile
 
 
 class Character:
-    def __init__(self, name, image_path, x, y, nomal_atk_img, atk, atk_spd, atk_length, hp, speed, melee):
+    def __init__(self, name, image_path, x, y, nomal_atk_img, skill_button_img, atk, atk_spd, atk_length, hp, speed, melee):
         self.name = name
         self.image = image_path 
         self.x, self.y = x, y
@@ -29,6 +29,7 @@ class Character:
         self.atk_speed = atk_spd
         self.atk_length = atk_length
         self.melee = melee
+        self.skill_button_img = skill_button_img
         self.last_atk_time = 0
         self.projectiles = []  # <--- 이 줄을 추가하여 투사체 리스트를 초기화합니다.
 
@@ -153,6 +154,10 @@ class Character:
 
         # 체력 바의 현재 체력 (녹색)
         draw_rectangle(bar_x, bar_y, bar_x + filled_width, bar_y + bar_height)
+        
+        
+    def draw_skill_button(self, button_x_start, button_y, button_width, button_height):
+        self.skill_button_img.draw(button_x_start, button_y, button_width, button_height)
 
     def draw_respawn_gauge(self):
         """부활 게이지 표시"""

@@ -37,7 +37,7 @@ class Dragon(Boss):
 
             # 충돌 체크
             for character in characters:
-                if projectile.check_collision(character) and character.is_dead == False:
+                if character.is_dead == False and projectile.check_collision(character) :
                     character.receive_attack(self.atk)
                     self.projectiles.remove(projectile)
                     break  # 충돌한 파이어볼은 제거

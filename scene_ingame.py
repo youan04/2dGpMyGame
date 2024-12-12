@@ -15,8 +15,10 @@ class SceneIngame:
         self.image = load_image('resource/image/boss_demon.png')
         self.tile = load_image('resource/image/stone_tile.png')
         self.font = load_font('C:/Windows/Fonts/Consola.ttf', 30)
+        self.basic_button = load_image('resource/image/button.png')
         self.board_size = 8
         self.grid_size = 50
+        self.buttons = []  # 스킬 버튼들을 저장할 리스트
         
         self.start_time = time.time()  # 시작 시간
         self.time_limit = 180  # 제한 시간 (초)
@@ -97,6 +99,8 @@ class SceneIngame:
         if hasattr(self, 'boss'):  # 보스가 있다면
             self.boss.draw()
             
+        self.draw_skill_buttons()
+            
     def spawn_boss(self):
         """보스 생성 (selected_boss에 따라)"""
         if global_state.selected_boss == "dragon":
@@ -128,6 +132,20 @@ class SceneIngame:
             )
             self.enemies.append(new_enemy)
             print(f"적 생성: {new_enemy.name} ({spawn_tile})")
+            
+    def draw_skill_buttons(self):
+        button_x_start = 100  # 첫 번째 버튼의 x좌표
+        button_y = 50         # 버튼들이 위치할 y좌표 (화면 아래)
+        button_width = 50     # 버튼의 너비
+        button_height = 50    # 버튼의 높이
+        
+        # 각 캐릭터의 스킬 버튼을 화면에 그리기
+        for i, character in enumerate(self.characters):
+            if i >= 4:  # 최대 4개 버튼만 그리기
+                break
+            # 스킬 버튼 이미지 그리기 (이미지 위치는 `button_x_start`에서 차례대로 배치)
+            self.basic_button.draw(button_x_start + (i * (button_width + 10)), button_y, button_width, button_height)
+            character.draw_skill_button(button_x_start + (i * (button_width + 10)), button_y, button_width, button_height)
 
     def get_empty_tiles(self):
         #비어 있는 타일 좌표 리스트 반환
@@ -150,6 +168,7 @@ class SceneIngame:
     def change_scene(self, new_scene):
         global_state.current_scene 
         global_state.current_scene = new_scene  # 전역 current_scene을 새로운 씬으로 교체
+        
     def handle_event(self, event):
         if event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
             x, y = event.x, 700 - event.y
