@@ -25,7 +25,7 @@ class Character:
         self.current_hp = hp  # 현재 체력
         self.is_dead = False  # 사망 상태 추적
         self.respawn_timer_start = None  # 부활 타이머 시작 시간
-        self.respawn_duration = 25  # 부활에 걸리는 시간 (초)
+        self.respawn_duration = 30  # 부활에 걸리는 시간 (초)
         self.defense = 0
         self.atk = atk
         self.atk_speed = atk_spd

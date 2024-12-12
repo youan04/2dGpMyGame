@@ -123,7 +123,7 @@ class SceneIngame:
                 image_path=load_image("resource/image/boss_dragon.png"),  # 드래곤 이미지 경로
                 x=200,
                 y=570,
-                hp=2000,
+                hp=2500,
                 atk=500,
                 atk_speed=1.0
             )

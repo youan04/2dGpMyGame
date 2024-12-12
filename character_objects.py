@@ -14,7 +14,7 @@ def create_characters():
                   load_image('resource/image/knight_nomal_atk.png'), 
                   load_image('resource/image/knight.png'),
                   load_image('resource\image\yellow-shield.png'),
-                  atk=20, atk_spd = 0.5, atk_length = 1, hp=500, speed=0.2, melee = True, skill_cool_down=12),
+                  atk=25, atk_spd = 0.5, atk_length = 1, hp=500, speed=0.2, melee = True, skill_cool_down=12),
                   
         Character("archer", 
                   load_image('resource/image/archer.png'), 
@@ -23,7 +23,7 @@ def create_characters():
                   load_image('resource/image/archer_nomal_atk.png'),
                   load_image('resource/image/archer.png'), 
                   load_image('resource\image\yellow-shield.png'),
-                  atk=20, atk_spd = 0.5, atk_length = 7, hp=100, speed=0.4, melee = False, skill_cool_down=12),
+                  atk=20, atk_spd = 0.7, atk_length = 7, hp=100, speed=0.4, melee = False, skill_cool_down=12),
         
         Character("mage", 
                   load_image('resource/image/mage.png'), 
@@ -32,7 +32,7 @@ def create_characters():
                   load_image('resource/image/knight_nomal_atk.png'),
                   load_image('resource/image/mage.png'), 
                   load_image('resource\image\magic_ball.png'),
-                  atk=30, atk_spd = 0.5, atk_length = 5, hp=200, speed=0.4, melee = False, skill_cool_down=5),
+                  atk=40, atk_spd = 0.3, atk_length = 5, hp=200, speed=0.4, melee = False, skill_cool_down=5),
                   
         Character("priest", 
                   load_image('resource/image/priest.png'),  
@@ -41,7 +41,7 @@ def create_characters():
                   load_image('resource/image/knight_nomal_atk.png'),
                   load_image('resource/image/priest.png'),
                   load_image('resource\image\yellow-shield.png'),
-                  atk=10, atk_spd = 0.5, atk_length = 3, hp=200, speed=0.3, melee = False, skill_cool_down=25),
+                  atk=20, atk_spd = 0.7, atk_length = 3, hp=200, speed=0.3, melee = False, skill_cool_down=23),
                   
                   
         Character("guard", 
@@ -51,7 +51,7 @@ def create_characters():
                   load_image('resource/image/knight_nomal_atk.png'),
                   load_image('resource/image/guard.png'),
                   load_image('resource\image\yellow-shield.png'),
-                  atk=10, atk_spd = 0.5, atk_length = 1,hp=1000, speed=0.1, melee = True, skill_cool_down=12),
+                  atk=20, atk_spd = 0.5, atk_length = 1,hp=1000, speed=0.1, melee = True, skill_cool_down=12),
                   
     ]
     return characters
