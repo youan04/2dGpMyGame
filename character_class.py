@@ -305,7 +305,7 @@ class Character:
         elif self.name == "mage":
             self.mage_skill()
         elif self.name == "priest":
-            self.priest_skill()
+            self.priest_skill(target)
         elif self.name == "guard":
             self.guard_skill()
 
@@ -325,6 +325,43 @@ class Character:
         self.skill_effect_time = time.time()  # 스킬 효과 발동 시간 기록
         print(f"{self.name}의 스킬 발동! 5초 동안 방어력 50 증가!")
         
+    def archer_skill(self):
+        """궁수수 스킬: 5초 동안 공격속도 100% 증가"""
+        self.atk_speed *= 2  # 공격속도 두 배 증가
+        self.skill_effect_time = time.time()  # 스킬 효과 발동 시간 기록
+        print(f"{self.name}의 스킬 발동! 5초 동안 공격속도 100% 증가!")
+        
+    def mage_skill(self):
+        """마법사사 스킬: 거대한 투사체"""
+        
+        # 마법사 스킬 발사 (큰 투사체 발사)
+        direction_x, direction_y = 0, 0
+        if "right" in self.state:
+            direction_x = 1
+        elif "left" in self.state:
+            direction_x = -1
+        elif "up" in self.state:
+            direction_y = 1
+        elif "down" in self.state:
+            direction_y = -1
+
+        # 큰 투사체 생성
+        projectile = Projectile(self.x, self.y, direction_x, direction_y, 1, 200, self.atk * 2, self.state, self.skill_img, 70, 70)  # 데미지가 두 배인 큰 투사체
+        self.projectiles.append(projectile)
+        print(f"{self.name}의 스킬이 발동되어 큰 투사체를 발사했습니다!")
+        
+    def priest_skill(self, allies):
+        """프리스트 스킬: 모든 아군의 체력 100 회복"""
+        healing_amount = 200
+        for ally in allies:
+            if ally.current_hp < ally.max_hp and ally.is_dead == False:  # 아군의 체력이 최대 체력보다 낮으면
+                ally.current_hp += healing_amount
+                if ally.current_hp > ally.max_hp:  # 체력이 최대치를 초과하지 않도록 제한
+                    ally.current_hp = ally.max_hp
+                print(f"{ally.name}의 체력이 {healing_amount}만큼 회복되었습니다. 현재 체력: {ally.current_hp}")
+            else:
+                print(f"{ally.name}의 체력은 이미 최대입니다!")
+                
     def calculate_cooldown(self):
         """남은 스킬 쿨타임 계산"""
         self.skill_current_time = time.time()

@@ -228,16 +228,16 @@ class SceneIngame:
                         
         
         if event.key == SDLK_1:  # ESC 키 처리
-            self.characters[0].use_skill()
+            self.characters[0].use_skill(self.characters)
         
         elif event.key == SDLK_2:  # '1' 키 처리
-            self.characters[1].use_skill()
+            self.characters[1].use_skill(self.characters)
             
         elif event.key == SDLK_3:  # '1' 키 처리
-            self.characters[2].use_skill()
+            self.characters[2].use_skill(self.characters)
             
         elif event.key == SDLK_4:  # '1' 키 처리
-            self.characters[3].use_skill()
+            self.characters[3].use_skill(self.characters)
 
 
     def deselect_all_characters(self):

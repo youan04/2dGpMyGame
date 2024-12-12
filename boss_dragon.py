@@ -76,3 +76,4 @@ class Dragon(Boss):
         # 투사체 그리기 (파이어볼을 그리기)
         for projectile in self.projectiles:
             projectile.draw()  # 각 파이어볼을 화면에 그린다
+

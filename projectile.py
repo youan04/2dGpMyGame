@@ -1,5 +1,5 @@
 class Projectile:
-    def __init__(self, x, y, direction_x, direction_y, speed, range, damage, direction, image):
+    def __init__(self, x, y, direction_x, direction_y, speed, range, damage, direction, image, width = 50, height = 50):
         self.x = x
         self.y = y
         self.direction_x = direction_x
@@ -10,6 +10,8 @@ class Projectile:
         self.direction = direction
         self.distance_travelled = 0  # 투사체가 이동한 거리
         self.angle = 0  # 회전 각도
+        self.width = width
+        self.height = height
         self.flip = 'w'  # 기본 반전 없이 출력
         self.image = image  # 투사체 이미지
 
@@ -45,15 +47,18 @@ class Projectile:
         """투사체 그리기"""
         # angle에 맞춰 회전된 이미지를 그린다.
         self.image.clip_composite_draw(0, 0, self.image.w, self.image.h, 
-                                       self.angle, self.flip, self.x, self.y, 50, 50)
+                                       self.angle, self.flip, self.x, self.y, self.width, self.height)
 
     def is_out_of_range(self):
         """투사체가 지정된 범위를 벗어나면 True"""
         return self.distance_travelled >= self.range * 50
     
     def check_collision(self, target):
-        # 충돌 감지 (단순히 위치가 겹치는지 확인)
-        if (self.x - target.width//2 < target.x < self.x + target.width//2) and (self.y - target.height//2 < target.y < self.y + target.height//2):
+        # 투사체 크기와 대상 크기를 고려한 충돌 감지
+        if (self.x - self.width // 2 < target.x + target.width // 2 and
+            self.x + self.width // 2 > target.x - target.width // 2 and
+            self.y - self.height // 2 < target.y + target.height // 2 and
+            self.y + self.height // 2 > target.y - target.height // 2):
             print("적과 충돌")
             return True
         return False
