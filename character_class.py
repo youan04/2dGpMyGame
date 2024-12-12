@@ -107,8 +107,8 @@ class Character:
                 break
                 # 충돌한 첫 번째 적만 처리하고 투사체를 삭제한 후 더 이상 확인하지 않음
                 
-                
-        
+                 
+        self.calculate_cooldown()  # 남은 쿨타임 계산
         
         if self.name == "knight" and self.skill_effect_time and time.time() - self.skill_effect_time >= 5:
             self.atk_speed /= 2  # 공격속도 원래대로 복구
@@ -300,6 +300,12 @@ class Character:
         # 캐릭터 이름에 따라 스킬 효과 다르게 적용
         if self.name == "knight":
             self.knight_skill()
+        elif self.name == "archer":
+            self.archer_skill()
+        elif self.name == "mage":
+            self.mage_skill()
+        elif self.name == "priest":
+            self.priest_skill()
         elif self.name == "guard":
             self.guard_skill()
 
@@ -318,6 +324,11 @@ class Character:
         self.defense += 50  # 방어력 50 증가
         self.skill_effect_time = time.time()  # 스킬 효과 발동 시간 기록
         print(f"{self.name}의 스킬 발동! 5초 동안 방어력 50 증가!")
+        
+    def calculate_cooldown(self):
+        """남은 스킬 쿨타임 계산"""
+        self.skill_current_time = time.time()
+        self.remaining_cooldown = max(0, self.skill_cool_down - (self.skill_current_time - self.last_skill_time))
         
     def die(self):
         """캐릭터 사망 처리"""

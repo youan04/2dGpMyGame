@@ -1,15 +1,26 @@
-# scene_select.py
+# scene_game_end.py
+
 from pico2d import *
+import scene_main
+from character_class import Character
+
 class SceneGameEnd:
-    def __init__(self):
+    def __init__(self, result):
         self.image = load_image(f'resource/image/map.png')  # 선택 씬 이미지 로드
+        self.result = result  # "Victory" 또는 "Defeat"
+        self.font = load_font('C:/Windows/Fonts/Consola.ttf', 50)
+        
 
     def update(self):
         pass
 
     def draw(self):
-        clear_canvas()  # 화면 지우기
-        self.image.draw(200, 350, 400, 700)  # 이미지 그리기
+        clear_canvas()
+        if self.result == "Victory":
+            self.font.draw(100, 350, "Victory!", (0, 255, 0))
+        elif self.result == "Defeat":
+            self.font.draw(100, 350, "Defeat!", (255, 0, 0))
+        update_canvas()
 
     def change_scene(self, new_scene):
         self.__class__ = new_scene.__class__  # 새로운 씬으로 클래스 변경
@@ -18,5 +29,5 @@ class SceneGameEnd:
     def handle_event(self, event):
         if event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
             x, y = event.x, 700 - event.y  # y 좌표 반전 (캔버스 높이에 맞게)
-            
+            self.change_scene(scene_main.SceneMain())
         return self  # 기본적으로 현재 씬 유지

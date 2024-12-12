@@ -25,7 +25,7 @@ class SceneIngame:
         self.bgm.repeat_play()  # 반복 재생
         
         self.start_time = time.time()  # 시작 시간
-        self.time_limit = 180  # 제한 시간 (초)
+        self.time_limit = 120  # 제한 시간 (초)
 
         # 선택된 캐릭터를 기반으로 이미 global_state에서 캐릭터들이 존재하므로
         self.characters = global_state.selected_characters  # 이미 선택된 Character 객체를 그대로 사용
@@ -56,7 +56,7 @@ class SceneIngame:
         remaining_time = self.time_limit - elapsed_time  # 남은 시간 계산
         
         if remaining_time <= 0:
-            self.change_scene(scene_game_end.SceneGameEnd())  # 타이머가 끝나면 게임 종료 씬으로 변경
+            self.change_scene(scene_game_end.SceneGameEnd("Defeat"))  # 타이머가 끝나면 게임 종료 씬으로 변경
 
             
         if current_time - self.last_enemy_spawn_time >= self.enemy_spawn_interval:
@@ -73,6 +73,16 @@ class SceneIngame:
                 
         if hasattr(self, 'boss'):  # 보스가 생성되었으면 업데이트
             self.boss.update(self.characters)
+        
+        if all(character.is_dead for character in self.characters):
+            self.change_scene(scene_game_end.SceneGameEnd("Defeat"))
+            return
+
+    # 보스 사망 시 승리 처리
+        if hasattr(self, 'boss') and self.boss.current_hp <= 0:
+            self.change_scene(scene_game_end.SceneGameEnd("Victory"))
+        
+            
                 
 
     def draw(self):
@@ -113,7 +123,7 @@ class SceneIngame:
                 image_path=load_image("resource/image/boss_dragon.png"),  # 드래곤 이미지 경로
                 x=200,
                 y=570,
-                hp=4000,
+                hp=100,
                 atk=500,
                 atk_speed=1.0
             )
@@ -151,7 +161,8 @@ class SceneIngame:
             self.basic_button.draw(button_x_start + (i * (button_width + 10)), button_y, button_width, button_height)
             character.draw_skill_button(button_x_start + (i * (button_width + 10)), button_y, button_width, button_height)
 
-            self.font.draw(button_x_start + (i * (button_width + 10))-10, button_y, f"{int(character.skill_cool_down - (character.skill_current_time - character.last_skill_time))}", (255, 255, 255))
+            cooldown_text = f"{int(character.remaining_cooldown)}" if character.remaining_cooldown > 0 else "0"
+            self.font.draw(button_x_start + (i * (button_width + 10)) - 10, button_y, cooldown_text, (255, 255, 255))
 
     def get_empty_tiles(self):
         #비어 있는 타일 좌표 리스트 반환
