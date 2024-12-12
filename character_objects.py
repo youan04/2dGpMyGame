@@ -31,7 +31,7 @@ def create_characters():
                   225, 
                   load_image('resource/image/knight_nomal_atk.png'),
                   load_image('resource/image/mage.png'), 
-                  load_image('resource\image\yellow-shield.png'),
+                  load_image('resource\image\magic_ball.png'),
                   atk=30, atk_spd = 0.5, atk_length = 5, hp=200, speed=0.4, melee = False, skill_cool_down=5),
                   
         Character("priest", 

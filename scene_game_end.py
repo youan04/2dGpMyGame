@@ -10,7 +10,7 @@ class SceneGameEnd:
         self.result = result  # "Victory" 또는 "Defeat"
         self.font = load_font('C:/Windows/Fonts/Consola.ttf', 50)
         
-
+    
     def update(self):
         pass
 
@@ -20,6 +20,9 @@ class SceneGameEnd:
             self.font.draw(100, 350, "Victory!", (0, 255, 0))
         elif self.result == "Defeat":
             self.font.draw(100, 350, "Defeat!", (255, 0, 0))
+            
+            self.font.draw(100, 450, "select your character", (0, 0, 0))
+            self.font.draw(100, 400, "character", (0, 0, 0))
         update_canvas()
 
     def change_scene(self, new_scene):
