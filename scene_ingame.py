@@ -143,9 +143,11 @@ class SceneIngame:
         for i, character in enumerate(self.characters):
             if i >= 4:  # 최대 4개 버튼만 그리기
                 break
-            # 스킬 버튼 이미지 그리기 (이미지 위치는 `button_x_start`에서 차례대로 배치)
+            # 스킬 버튼 이미지 그리기 (이미지 위치는 button_x_start에서 차례대로 배치)
             self.basic_button.draw(button_x_start + (i * (button_width + 10)), button_y, button_width, button_height)
             character.draw_skill_button(button_x_start + (i * (button_width + 10)), button_y, button_width, button_height)
+
+            self.font.draw(button_x_start + (i * (button_width + 10))-10, button_y, f"{int(character.skill_cool_down - (character.skill_current_time - character.last_skill_time))}", (255, 255, 255))
 
     def get_empty_tiles(self):
         #비어 있는 타일 좌표 리스트 반환
@@ -208,6 +210,19 @@ class SceneIngame:
                     if not target_tile_empty:
                         self.deselect_all_characters()
                         clicked_character.isSelected = True
+                        
+        
+        if event.key == SDLK_1:  # ESC 키 처리
+            self.characters[0].use_skill()
+        
+        elif event.key == SDLK_2:  # '1' 키 처리
+            self.characters[1].use_skill()
+            
+        elif event.key == SDLK_3:  # '1' 키 처리
+            self.characters[2].use_skill()
+            
+        elif event.key == SDLK_4:  # '1' 키 처리
+            self.characters[3].use_skill()
 
 
     def deselect_all_characters(self):

@@ -3,10 +3,11 @@
 from pico2d import *
 import time
 from projectile import Projectile
+from skill import Skill
 
 
 class Character:
-    def __init__(self, name, image_path, x, y, nomal_atk_img, skill_button_img, atk, atk_spd, atk_length, hp, speed, melee):
+    def __init__(self, name, image_path, x, y, nomal_atk_img, skill_button_img, skill_img, atk, atk_spd, atk_length, hp, speed, melee, skill_cool_down):
         self.name = name
         self.image = image_path 
         self.x, self.y = x, y
@@ -25,12 +26,25 @@ class Character:
         self.is_dead = False  # 사망 상태 추적
         self.respawn_timer_start = None  # 부활 타이머 시작 시간
         self.respawn_duration = 25  # 부활에 걸리는 시간 (초)
+        self.defense = 0
         self.atk = atk
         self.atk_speed = atk_spd
         self.atk_length = atk_length
         self.melee = melee
         self.skill_button_img = skill_button_img
         self.last_atk_time = 0
+        
+        self.is_using_skill = False  # 스킬 사용 여부
+        self.skill_img = skill_img
+        self.skill_start_time = None  # 스킬 발동 시간
+        self.skill_effect_time = None
+        self.skill_current_time = skill_cool_down
+        self.skill_cool_down = skill_cool_down
+        self.last_skill_time = 0  # last_skill_time을 0 또는 적절한 초기값으로 설정
+        self.skill_duration = 5  # 스킬 지속 시간 (초)
+        self.original_atk_spd = atk_spd  # 기본 공격 속도
+        self.atk_spd = atk_spd  # 현재 공격 속도
+        
         self.projectiles = []  # <--- 이 줄을 추가하여 투사체 리스트를 초기화합니다.
 
     def set_state(self, new_state):
@@ -93,6 +107,18 @@ class Character:
                 break
                 # 충돌한 첫 번째 적만 처리하고 투사체를 삭제한 후 더 이상 확인하지 않음
                 
+                
+        
+        
+        if self.name == "knight" and self.skill_effect_time and time.time() - self.skill_effect_time >= 5:
+            self.atk_speed /= 2  # 공격속도 원래대로 복구
+            self.skill_effect_time = 0
+            print(f"{self.name}의 스킬이 종료되었습니다. 공격속도가 원래대로 돌아갔습니다.")
+
+        elif self.name == "guard" and self.skill_effect_time and time.time() - self.skill_effect_time >= 5:
+            self.defense = self.base_defense  # 방어력 원래대로 복구
+            self.skill_effect_time = 0
+            print(f"{self.name}의 스킬이 종료되었습니다. 방어력이 원래대로 돌아갔습니다.")
      
             
                     
@@ -195,10 +221,18 @@ class Character:
             self.set_state("walk_down")
 
     def receive_attack(self, damage):
-        """적으로부터 공격을 받아 HP 감소"""
+        """적으로부터 공격을 받아 HP 감소 (방어력 적용)"""
         if self.current_hp > 0:
-            self.current_hp -= damage
-            print(f"{self.name}이(가) {damage}의 피해를 입었습니다! (남은 체력: {self.current_hp})")
+            # 방어력에 따른 데미지 감소 (50% 방어력인 경우, 데미지 절반)
+            reduced_damage = damage * (1 - self.defense / 100)
+
+            # 실제 데미지가 0 이하로 내려가지 않도록 보정
+            if reduced_damage < 0:
+                reduced_damage = 0
+
+            self.current_hp -= reduced_damage
+            print(f"{self.name}이(가) {reduced_damage:.2f}의 피해를 입었습니다! (남은 체력: {self.current_hp})")
+            
             if self.current_hp <= 0:
                 self.current_hp = 0
                 print(f"{self.name}이(가) 쓰러졌습니다!")
@@ -246,6 +280,44 @@ class Character:
     #                 target_enemy = enemy
 
     #     return target_enemy
+    
+    def use_skill(self, target=None):
+        """스킬 발동"""
+        if self.is_dead:
+            print(f"{self.name}은(는) 사망 상태에서 스킬을 사용할 수 없습니다.")
+            return
+
+        self.skill_current_time = time.time()
+        
+        if self.skill_current_time - self.last_skill_time < self.skill_cool_down:
+            print(f"스킬은 아직 쿨타임 중입니다. 남은 시간: {int(self.skill_cool_down - (self.skill_current_time - self.last_skill_time))}초")
+            return
+
+        self.is_using_skill = True
+        self.last_skill_time = self.skill_current_time
+        print(f"{self.name}이(가) 스킬을 사용했습니다!")
+ 
+        # 캐릭터 이름에 따라 스킬 효과 다르게 적용
+        if self.name == "knight":
+            self.knight_skill()
+        elif self.name == "guard":
+            self.guard_skill()
+
+        self.is_using_skill = False
+
+        
+    def knight_skill(self):
+        """기사 스킬: 5초 동안 공격속도 100% 증가"""
+        self.atk_speed *= 2  # 공격속도 두 배 증가
+        self.skill_effect_time = time.time()  # 스킬 효과 발동 시간 기록
+        print(f"{self.name}의 스킬 발동! 5초 동안 공격속도 100% 증가!")
+        
+    def guard_skill(self):
+        """수호자 스킬: 5초 동안 방어력 50 증가"""
+        self.base_defense = self.defense  # 기존 방어력 백업
+        self.defense += 50  # 방어력 50 증가
+        self.skill_effect_time = time.time()  # 스킬 효과 발동 시간 기록
+        print(f"{self.name}의 스킬 발동! 5초 동안 방어력 50 증가!")
         
     def die(self):
         """캐릭터 사망 처리"""
