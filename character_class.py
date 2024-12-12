@@ -114,6 +114,11 @@ class Character:
             self.atk_speed /= 2  # 공격속도 원래대로 복구
             self.skill_effect_time = 0
             print(f"{self.name}의 스킬이 종료되었습니다. 공격속도가 원래대로 돌아갔습니다.")
+            
+        if self.name == "archer" and self.skill_effect_time and time.time() - self.skill_effect_time >= 5:
+            self.atk_speed /= 2  # 공격속도 원래대로 복구
+            self.skill_effect_time = 0
+            print(f"{self.name}의 스킬이 종료되었습니다. 공격속도가 원래대로 돌아갔습니다.")
 
         elif self.name == "guard" and self.skill_effect_time and time.time() - self.skill_effect_time >= 5:
             self.defense = self.base_defense  # 방어력 원래대로 복구

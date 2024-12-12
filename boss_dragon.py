@@ -8,7 +8,7 @@ class Dragon(Boss):
     def __init__(self, name, image_path, x, y, hp, atk, atk_speed):
         super().__init__(name, image_path, x, y, hp, atk, atk_speed)
         self.last_skill_time = 0  # 마지막 스킬 사용 시간
-        self.skill_cd = 10.0  # 스킬 사용 주기 (4초마다 사용)
+        self.skill_cd = 20.0  # 스킬 사용 주기 (4초마다 사용)
         self.skill1_img = load_image("resource/image/fireball1.png")  # 파이어볼 이미지
         self.danger_img = load_image("resource/image/danger.png")  # 위험 영역 이미지
         self.skill1_active = False  # 파이어볼 공격 활성화 체크

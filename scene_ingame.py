@@ -44,7 +44,7 @@ class SceneIngame:
             
         self.enemies = []  # 적 객체 리스트
         self.last_enemy_spawn_time = time.time()  # 마지막 적 생성 시간
-        self.enemy_spawn_interval = 8  # 적 생성 간격 (초)
+        self.enemy_spawn_interval = 5  # 적 생성 간격 (초)
         
         self.spawn_boss()
 
@@ -123,7 +123,7 @@ class SceneIngame:
                 image_path=load_image("resource/image/boss_dragon.png"),  # 드래곤 이미지 경로
                 x=200,
                 y=570,
-                hp=100,
+                hp=2000,
                 atk=500,
                 atk_speed=1.0
             )
@@ -142,7 +142,7 @@ class SceneIngame:
                 position=(spawn_tile[0], spawn_tile[1]),
                 attack_power=30,
                 attack_speed=0.5,
-                hp=100
+                hp=20
             )
             self.enemies.append(new_enemy)
             print(f"적 생성: {new_enemy.name} ({spawn_tile})")
