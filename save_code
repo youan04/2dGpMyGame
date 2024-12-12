@@ -1,7 +1,0 @@
-# # 적 탐색 및 공격
-# target_enemy = self.find_target(enemies)
-# if target_enemy:
-#                 current_time = time.time()
-#                 if current_time - self.last_atk_time >= 1 / self.atk_speed:
-#                     self.nomal_attack(target_enemy)
-#                     self.last_atk_time = current_time            

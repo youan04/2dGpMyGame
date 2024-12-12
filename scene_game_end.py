@@ -17,7 +17,7 @@ class SceneGameEnd:
     def __init__(self, result):
         self.image = load_image(resource_path('resource/image/map.png'))  # 선택 씬 이미지 로드
         self.result = result  # "Victory" 또는 "Defeat"
-        self.font = load_font(resource_path('C:/Windows/Fonts/Consola.ttf', 50))
+        self.font = load_font(resource_path('C:/Windows/Fonts/Consola.ttf'), 50)
         
     
     def update(self):

@@ -2,6 +2,14 @@
 from pico2d import *
 import time
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 class Enemy:
     def __init__(self, name, position, attack_power, attack_speed, hp):
         """
@@ -18,7 +26,7 @@ class Enemy:
         self.attack_speed = attack_speed
         self.current_hp = hp
         self.max_hp = hp
-        self.image = load_image('resource/image/little_dragon.png')  # 적 이미지
+        self.image = load_image(resource_path('resource/image/little_dragon.png'))  # 적 이미지
         self.width, self.height = 50, 50
         self.last_attack_time = 0  # 마지막 공격 시각
         self.x = position[0] * 50 + 50 // 2

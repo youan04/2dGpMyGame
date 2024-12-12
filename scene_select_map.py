@@ -16,9 +16,9 @@ class SceneSelect:
         self.image = load_image(resource_path('resource/image/map.png'))  # 선택 씬 이미지 로드
         self.buttons = [
             {"name": "dragon", "x": 100, "y": 575, "image": load_image(resource_path('resource/image/boss_dragon.png'))},
-            #{"name": "demon", "x": 100, "y": 450, "image": load_image('resource/image/boss_demon.png')},
+            #{"name": "demon", "x": 100, "y": 450, "image": load_image(resource_path('resource/image/boss_demon.png'))},
         ]
-        self.home = load_image('resource/image/home.png')
+        self.home = load_image(resource_path('resource/image/home.png'))
         self.button_size = 250  # 버튼 크기
 
     def update(self):

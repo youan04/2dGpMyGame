@@ -19,11 +19,11 @@ class SceneCharacter:
         self.home = load_image(resource_path('resource/image/home.png'))
         # 버튼 위치와 크기
         self.buttons = [
-            {"name": "knight", "x": 75, "y": 575, "image": load_image('resource/image/knight.png')},
-            {"name": "archer", "x": 200, "y": 575, "image": load_image('resource/image/archer.png')},
-            {"name": "mage", "x": 75, "y": 450, "image": load_image('resource/image/mage.png')},
-            {"name": "priest", "x": 200, "y": 450, "image": load_image('resource/image/priest.png')},
-            {"name": "guard", "x": 325, "y": 575, "image": load_image('resource/image/guard.png')},
+            {"name": "knight", "x": 75, "y": 575, "image": load_image(resource_path('resource/image/knight.png'))},
+            {"name": "archer", "x": 200, "y": 575, "image": load_image(resource_path('resource/image/archer.png'))},
+            {"name": "mage", "x": 75, "y": 450, "image": load_image(resource_path('resource/image/mage.png'))},
+            {"name": "priest", "x": 200, "y": 450, "image": load_image(resource_path('resource/image/priest.png'))},
+            {"name": "guard", "x": 325, "y": 575, "image": load_image(resource_path('resource/image/guard.png'))},
         ]
         self.button_size = 125  # 버튼 크기
         

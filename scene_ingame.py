@@ -128,7 +128,7 @@ class SceneIngame:
         if global_state.selected_boss == "dragon":
             self.boss = Dragon(
                 name="Dragon",
-                image_path=load_image("resource/image/boss_dragon.png"),  # 드래곤 이미지 경로
+                image_path=load_image(resource_path("resource/image/boss_dragon.png")),  # 드래곤 이미지 경로
                 x=200,
                 y=570,
                 hp=2500,
