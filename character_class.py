@@ -46,6 +46,9 @@ class Character:
         self.atk_spd = atk_spd  # 현재 공격 속도
         
         self.projectiles = []  # <--- 이 줄을 추가하여 투사체 리스트를 초기화합니다.
+        
+        self.skill_sound = load_music('resource/sound/skill_sound.wav')  # BGM 파일 로드
+        self.skill_sound.set_volume(40)  # 볼륨 설정 (0~128)
 
     def set_state(self, new_state):
         if self.state != new_state:
@@ -108,22 +111,7 @@ class Character:
                 # 충돌한 첫 번째 적만 처리하고 투사체를 삭제한 후 더 이상 확인하지 않음
                 
                  
-        self.calculate_cooldown()  # 남은 쿨타임 계산
         
-        if self.name == "knight" and self.skill_effect_time and time.time() - self.skill_effect_time >= 5:
-            self.atk_speed /= 2  # 공격속도 원래대로 복구
-            self.skill_effect_time = 0
-            print(f"{self.name}의 스킬이 종료되었습니다. 공격속도가 원래대로 돌아갔습니다.")
-            
-        if self.name == "archer" and self.skill_effect_time and time.time() - self.skill_effect_time >= 5:
-            self.atk_speed /= 2  # 공격속도 원래대로 복구
-            self.skill_effect_time = 0
-            print(f"{self.name}의 스킬이 종료되었습니다. 공격속도가 원래대로 돌아갔습니다.")
-
-        elif self.name == "guard" and self.skill_effect_time and time.time() - self.skill_effect_time >= 5:
-            self.defense = self.base_defense  # 방어력 원래대로 복구
-            self.skill_effect_time = 0
-            print(f"{self.name}의 스킬이 종료되었습니다. 방어력이 원래대로 돌아갔습니다.")
      
             
                     
@@ -162,6 +150,33 @@ class Character:
             self.x, self.y, self.width, self.height
         )
 
+        self.calculate_cooldown()  # 남은 쿨타임 계산
+        
+        if self.name == "knight" and self.skill_effect_time and time.time() - self.skill_effect_time >= 5:
+            self.atk_speed /= 2  # 공격속도 원래대로 복구
+            self.skill_effect_time = 0
+            self.is_using_skill = False
+            print(f"{self.name}의 스킬이 종료되었습니다. 공격속도가 원래대로 돌아갔습니다.")
+            
+        elif self.name == "archer" and self.skill_effect_time and time.time() - self.skill_effect_time >= 5:
+            self.atk_speed /= 2  # 공격속도 원래대로 복구
+            self.skill_effect_time = 0
+            self.is_using_skill = False
+            print(f"{self.name}의 스킬이 종료되었습니다. 공격속도가 원래대로 돌아갔습니다.")
+
+        elif self.name == "guard" and self.skill_effect_time and time.time() - self.skill_effect_time >= 5:
+            self.defense = self.base_defense  # 방어력 원래대로 복구
+            self.skill_effect_time = 0
+            self.is_using_skill = False
+            print(f"{self.name}의 스킬이 종료되었습니다. 방어력이 원래대로 돌아갔습니다.")
+            
+            
+        if self.name == "guard" and self.is_using_skill == True:
+            self.skill_img.draw(self.x, self.y, 30, 30)  # 캐릭터 위에 방패 표시
+            
+        if self.name == "knight" and self.is_using_skill == True:
+            self.skill_img.draw(self.x, self.y-20, 50, 10)  # 캐릭터 위에 방패 표시
+            
         # 체력바 그리기
         self.draw_health_bar()
         
@@ -303,6 +318,7 @@ class Character:
 
         self.is_using_skill = True
         self.last_skill_time = self.skill_current_time
+        
         print(f"{self.name}이(가) 스킬을 사용했습니다!")
  
         # 캐릭터 이름에 따라 스킬 효과 다르게 적용
@@ -317,30 +333,34 @@ class Character:
         elif self.name == "guard":
             self.guard_skill()
 
-        self.is_using_skill = False
+        
 
         
     def knight_skill(self):
         """기사 스킬: 5초 동안 공격속도 100% 증가"""
         self.atk_speed *= 2  # 공격속도 두 배 증가
         self.skill_effect_time = time.time()  # 스킬 효과 발동 시간 기록
+        #self.skill_sound.play(1)
         print(f"{self.name}의 스킬 발동! 5초 동안 공격속도 100% 증가!")
         
     def guard_skill(self):
         """수호자 스킬: 5초 동안 방어력 50 증가"""
         self.base_defense = self.defense  # 기존 방어력 백업
         self.defense += 50  # 방어력 50 증가
+        
         self.skill_effect_time = time.time()  # 스킬 효과 발동 시간 기록
+       # self.skill_sound.play(1)
         print(f"{self.name}의 스킬 발동! 5초 동안 방어력 50 증가!")
         
     def archer_skill(self):
-        """궁수수 스킬: 5초 동안 공격속도 100% 증가"""
+        """궁수 스킬: 5초 동안 공격속도 100% 증가"""
         self.atk_speed *= 2  # 공격속도 두 배 증가
         self.skill_effect_time = time.time()  # 스킬 효과 발동 시간 기록
+        #self.skill_sound.play(1)
         print(f"{self.name}의 스킬 발동! 5초 동안 공격속도 100% 증가!")
         
     def mage_skill(self):
-        """마법사사 스킬: 거대한 투사체"""
+        """마법사 스킬: 거대한 투사체"""
         
         # 마법사 스킬 발사 (큰 투사체 발사)
         direction_x, direction_y = 0, 0
@@ -356,6 +376,8 @@ class Character:
         # 큰 투사체 생성
         projectile = Projectile(self.x, self.y, direction_x, direction_y, 1, 200, self.atk * 2, self.state, self.skill_img, 70, 70)  # 데미지가 두 배인 큰 투사체
         self.projectiles.append(projectile)
+        self.is_using_skill = False
+        #self.skill_sound.play(1)
         print(f"{self.name}의 스킬이 발동되어 큰 투사체를 발사했습니다!")
         
     def priest_skill(self, allies):
@@ -366,9 +388,13 @@ class Character:
                 ally.current_hp += healing_amount
                 if ally.current_hp > ally.max_hp:  # 체력이 최대치를 초과하지 않도록 제한
                     ally.current_hp = ally.max_hp
+                    
                 print(f"{ally.name}의 체력이 {healing_amount}만큼 회복되었습니다. 현재 체력: {ally.current_hp}")
             else:
                 print(f"{ally.name}의 체력은 이미 최대입니다!")
+                
+        #self.skill_sound.play(1)
+        self.is_using_skill = False
                 
     def calculate_cooldown(self):
         """남은 스킬 쿨타임 계산"""
