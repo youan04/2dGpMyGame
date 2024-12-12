@@ -20,6 +20,10 @@ class SceneIngame:
         self.grid_size = 50
         self.buttons = []  # 스킬 버튼들을 저장할 리스트
         
+        self.bgm = load_music('resource/sound/마왕의 군대.wav')  # BGM 파일 로드
+        self.bgm.set_volume(40)  # 볼륨 설정 (0~128)
+        self.bgm.repeat_play()  # 반복 재생
+        
         self.start_time = time.time()  # 시작 시간
         self.time_limit = 180  # 제한 시간 (초)
 
