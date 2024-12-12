@@ -183,7 +183,10 @@ class Character:
         
         
     def draw_skill_button(self, button_x_start, button_y, button_width, button_height):
-        self.skill_button_img.draw(button_x_start, button_y, button_width, button_height)
+        self.skill_button_img.clip_draw(self.image.w // 3*1 ,self.image.h // 4*3,self.image.w // 3,self.image.h // 3,button_x_start, button_y, button_width, button_height)
+        
+        
+
 
     def draw_respawn_gauge(self):
         """부활 게이지 표시"""
