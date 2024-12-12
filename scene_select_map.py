@@ -3,11 +3,19 @@ import scene_ingame
 from pico2d import *
 import scene_main
 
+def resource_path(relative_path):
+    try:    
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 class SceneSelect:
     def __init__(self):
-        self.image = load_image('resource/image/map.png')  # 선택 씬 이미지 로드
+        self.image = load_image(resource_path('resource/image/map.png'))  # 선택 씬 이미지 로드
         self.buttons = [
-            {"name": "dragon", "x": 100, "y": 575, "image": load_image('resource/image/boss_dragon.png')},
+            {"name": "dragon", "x": 100, "y": 575, "image": load_image(resource_path('resource/image/boss_dragon.png'))},
             #{"name": "demon", "x": 100, "y": 450, "image": load_image('resource/image/boss_demon.png')},
         ]
         self.home = load_image('resource/image/home.png')

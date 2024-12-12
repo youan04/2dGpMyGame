@@ -5,6 +5,13 @@ import time
 from projectile import Projectile
 from skill import Skill
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 class Character:
     def __init__(self, name, image_path, x, y, nomal_atk_img, skill_button_img, skill_img, atk, atk_spd, atk_length, hp, speed, melee, skill_cool_down):
@@ -47,7 +54,7 @@ class Character:
         
         self.projectiles = []  # <--- 이 줄을 추가하여 투사체 리스트를 초기화합니다.
         
-        self.skill_sound = load_music('resource/sound/skill_sound.wav')  # BGM 파일 로드
+        self.skill_sound = load_music(resource_path('resource/sound/skill_sound.wav'))  # BGM 파일 로드
         self.skill_sound.set_volume(40)  # 볼륨 설정 (0~128)
 
     def set_state(self, new_state):

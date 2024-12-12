@@ -3,14 +3,24 @@ from pico2d import *
 import time
 from projectile import Projectile
 
+import os
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 # Boss 클래스를 상속받은 Dragon 클래스 정의
 class Dragon(Boss):
     def __init__(self, name, image_path, x, y, hp, atk, atk_speed):
         super().__init__(name, image_path, x, y, hp, atk, atk_speed)
         self.last_skill_time = 0  # 마지막 스킬 사용 시간
         self.skill_cd = 20.0  # 스킬 사용 주기 (4초마다 사용)
-        self.skill1_img = load_image("resource/image/fireball1.png")  # 파이어볼 이미지
-        self.danger_img = load_image("resource/image/danger.png")  # 위험 영역 이미지
+        self.skill1_img = load_image(resource_path("resource/image/fireball1.png"))  # 파이어볼 이미지
+        self.danger_img = load_image(resource_path("resource/image/danger.png"))  # 위험 영역 이미지
         self.skill1_active = False  # 파이어볼 공격 활성화 체크
         self.skill1_time_left = 0  # 파이어볼 공격의 남은 시간
         self.skill1_target_tiles = []  # 발톱 공격의 대상이 되는 타일들

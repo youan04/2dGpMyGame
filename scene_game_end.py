@@ -4,11 +4,20 @@ from pico2d import *
 import scene_main
 from character_class import Character
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+
 class SceneGameEnd:
     def __init__(self, result):
-        self.image = load_image(f'resource/image/map.png')  # 선택 씬 이미지 로드
+        self.image = load_image(resource_path('resource/image/map.png'))  # 선택 씬 이미지 로드
         self.result = result  # "Victory" 또는 "Defeat"
-        self.font = load_font('C:/Windows/Fonts/Consola.ttf', 50)
+        self.font = load_font(resource_path('C:/Windows/Fonts/Consola.ttf', 50))
         
     
     def update(self):

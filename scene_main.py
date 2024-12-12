@@ -2,18 +2,26 @@
 from pico2d import *
 import scene_select_character, scene_select_map
 
+def resource_path(relative_path):
+    try:    
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 class SceneMain:
     def __init__(self):
-        self.image = load_image('resource/image/blue_sky.png')  # 메인 씬 이미지 로드
-        self.adventure_button = load_image('resource/image/adventure_button.png')  # 모험 버튼 이미지 로드
-        self.character_button = load_image('resource/image/charactor_choice_button.png')  # 캐릭터 선택 버튼 이미지 로드
+        self.image = load_image(resource_path('resource/image/blue_sky.png'))  # 메인 씬 이미지 로드
+        self.adventure_button = load_image(resource_path('resource/image/adventure_button.png'))  # 모험 버튼 이미지 로드
+        self.character_button = load_image(resource_path('resource/image/charactor_choice_button.png'))  # 캐릭터 선택 버튼 이미지 로드
         
         # 버튼 위치 및 크기 설정 (좌표 및 크기는 필요에 따라 조정)
         self.adventure_button_x, self.adventure_button_y = 100, 150
         self.character_button_x, self.character_button_y = 300, 150
         self.button_width, self.button_height = 100, 100  # 버튼의 가로세로 크기 설정
         
-        self.bgm = load_music('resource/sound/게임 시작!.mp3')  # BGM 파일 로드
+        self.bgm = load_music(resource_path('resource/sound/게임 시작!.mp3'))  # BGM 파일 로드
         self.bgm.set_volume(64)  # 볼륨 설정 (0~128)
         self.bgm.repeat_play()  # 반복 재생
 

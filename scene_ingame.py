@@ -10,17 +10,25 @@ import scene_game_end
 from boss_class import Boss
 from boss_dragon import Dragon  # Dragon 클래스를 임포트
 
+def resource_path(relative_path):
+    try:    
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 class SceneIngame:
     def __init__(self):
-        self.image = load_image('resource/image/boss_demon.png')
-        self.tile = load_image('resource/image/stone_tile.png')
-        self.font = load_font('C:/Windows/Fonts/Consola.ttf', 30)
-        self.basic_button = load_image('resource/image/button.png')
+        self.image = load_image(resource_path('resource/image/boss_demon.png'))
+        self.tile = load_image(resource_path('resource/image/stone_tile.png'))
+        self.font = load_font(resource_path('C:/Windows/Fonts/Consola.ttf'), 30)
+        self.basic_button = load_image(resource_path('resource/image/button.png'))
         self.board_size = 8
         self.grid_size = 50
         self.buttons = []  # 스킬 버튼들을 저장할 리스트
         
-        self.bgm = load_music('resource/sound/마왕의 군대.wav')  # BGM 파일 로드
+        self.bgm = load_music(resource_path('resource/sound/마왕의 군대.wav')) # BGM 파일 로드
         self.bgm.set_volume(40)  # 볼륨 설정 (0~128)
         self.bgm.repeat_play()  # 반복 재생
         

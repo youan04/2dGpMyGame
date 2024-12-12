@@ -4,11 +4,19 @@ import global_state  # global_state.py 파일 임포트
 from character_objects import create_characters  # 캐릭터 객체 가져오기
 import scene_main
 
+def resource_path(relative_path):
+    try:    
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 class SceneCharacter:
     def __init__(self):
         # 캐릭터 씬 이미지 로드
-        self.image = load_image('resource/image/door.png')  
-        self.home = load_image('resource/image/home.png')
+        self.image = load_image(resource_path('resource/image/door.png'))  
+        self.home = load_image(resource_path('resource/image/home.png'))
         # 버튼 위치와 크기
         self.buttons = [
             {"name": "knight", "x": 75, "y": 575, "image": load_image('resource/image/knight.png')},
